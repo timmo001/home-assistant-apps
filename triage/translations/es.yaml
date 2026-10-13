@@ -1,0 +1,88 @@
+# The app's option names and descriptions in Home Assistant, in Spanish,
+# translated from en.yaml. Corrections are welcome: see
+# https://triage.timmo.dev/languages/
+#
+# Run `mise run translations:check` after changing a translation.
+---
+configuration:
+  # An admin token for setting up the server before any admin exists.
+  server_admin_token:
+    name: Token de administrador del servidor
+    description: >-
+      Un token de administrador de al menos 32 caracteres que el servidor
+      siempre acepta, para gestionar hosts, workers y administradores con
+      --server. No se guarda ni se lista. Déjalo vacío cuando hayas añadido
+      un administrador propio.
+  trust_proxy:
+    name: Confiar en el proxy inverso
+    description: >-
+      Confiar en X-Forwarded-Host y X-Forwarded-For. Actívalo solo cuando un
+      proxy inverso sea la única forma de llegar al servidor.
+  # Decision models judge whether an issue is worth fixing.
+  decide_daily:
+    name: Límite diario de decisiones
+    description: >-
+      El máximo de problemas que cada modelo de decisión puede evaluar en 24
+      horas, entre el servidor y sus workers.
+  # Language models suggest fixes.
+  suggest_daily:
+    name: Límite diario de sugerencias
+    description: >-
+      El máximo de correcciones que cada modelo de lenguaje puede sugerir en
+      24 horas, entre el servidor y sus workers.
+  new_hours:
+    name: Horas que un problema sigue siendo nuevo
+    description: >-
+      Cuánto tiempo un problema cuenta como nuevo después de verse por
+      primera vez.
+  # Quiet and regressed are issue states, as the web UI names them.
+  quiet_hours:
+    name: Horas hasta que un problema queda tranquilo
+    description: >-
+      Cuánto tiempo puede pasar un problema sin eventos antes de quedar
+      tranquilo. Un problema resuelto que vuelve también sigue como
+      reaparecido durante ese tiempo.
+  # Home Assistant shows the language codes as they are, so the description
+  # names them. Keep the language names in their own languages.
+  language:
+    name: Idioma
+    description: >-
+      El idioma de la interfaz web: de Deutsch, en English, es Español, fr
+      Français, it Italiano, ja 日本語, nl Nederlands, pl Polski, pt-BR
+      Português (Brasil) o zh-Hans 简体中文. Las traducciones están generadas
+      por IA, así que algunas partes pueden sonar raras.
+  # Home Assistant Core is the main part of Home Assistant. Keep "Core".
+  collect_core:
+    name: Recoger los errores de Home Assistant Core
+    description: >-
+      Recoger los errores y avisos de Home Assistant Core, con sus
+      tracebacks, del journal del host, como el host home-assistant.
+  # The Supervisor runs Home Assistant, its apps and updates. Keep "Supervisor".
+  collect_supervisor:
+    name: Recoger los errores del Supervisor
+    description: >-
+      Recoger los errores y avisos del Supervisor de Home Assistant, con sus
+      tracebacks, del journal del host, como el host home-assistant.
+  # The machine Home Assistant runs on, such as a Green or a Raspberry Pi.
+  collect_host:
+    name: Recoger los errores del host
+    description: >-
+      Recoger fallos, servicios que fallan, procesos cerrados por falta de
+      memoria y errores del propio journal del host, como el host
+      home-assistant. Los registros de Home Assistant y de las apps se dejan
+      fuera aquí, porque se recogen por separado.
+  # The Supervisor's own containers for DNS, audio and so on. Keep "Supervisor".
+  collect_plugins:
+    name: Recoger los errores de los plugins del Supervisor
+    description: >-
+      Recoger los errores y avisos de los plugins del Supervisor, como DNS y
+      audio, del journal del host, como el host home-assistant. Solo se leen
+      las líneas que indican un nivel. DNS registra mucho que rara vez vale la
+      pena arreglar, así que está desactivado hasta que lo actives.
+  # Apps are what Home Assistant used to call add-ons.
+  collect_apps:
+    name: Recoger los errores de las apps
+    description: >-
+      Recoger los errores y avisos de tus otras apps del journal del host,
+      como el host home-assistant. Solo se leen las líneas que indican un
+      nivel.

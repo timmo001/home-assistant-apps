@@ -1,0 +1,75 @@
+# The app's option names and descriptions in Home Assistant, in Japanese,
+# translated from en.yaml. Corrections are welcome: see
+# https://triage.timmo.dev/languages/
+#
+# Run `mise run translations:check` after changing a translation.
+---
+configuration:
+  # An admin token for setting up the server before any admin exists.
+  server_admin_token:
+    name: サーバーの管理者トークン
+    description: >-
+      サーバーが常に受け付ける 32 文字以上の管理者トークンで、--server
+      でホスト、ワーカー、管理者を管理するためのものです。保存も一覧表示もされません。自分の管理者を追加したら空にしてください。
+  trust_proxy:
+    name: リバースプロキシを信頼
+    description: >-
+      X-Forwarded-Host と X-Forwarded-For
+      を信頼します。リバースプロキシがサーバーへの唯一の経路である場合にのみオンにしてください。
+  # Decision models judge whether an issue is worth fixing.
+  decide_daily:
+    name: 1 日あたりの判定上限
+    description: >-
+      各判定モデルが 24 時間以内に判定できる問題の最大数で、サーバーとワーカーの合計です。
+  # Language models suggest fixes.
+  suggest_daily:
+    name: 1 日あたりの提案上限
+    description: >-
+      各言語モデルが 24 時間以内に提案できる修正の最大数で、サーバーとワーカーの合計です。
+  new_hours:
+    name: 問題が新規のままでいる時間
+    description: 問題が最初に発生してから新規として扱われる時間です。
+  # Quiet and regressed are issue states, as the web UI names them.
+  quiet_hours:
+    name: 問題が沈静になるまでの時間
+    description: >-
+      イベントのない状態がどれだけ続くと問題が沈静になるかです。解決済みの問題が再び発生した場合も、この時間は再発のままになります。
+  # Home Assistant shows the language codes as they are, so the description
+  # names them. Keep the language names in their own languages.
+  language:
+    name: 言語
+    description: >-
+      Web UI の言語: de Deutsch、en English、es Español、fr Français、it
+      Italiano、ja 日本語、nl Nederlands、pl Polski、pt-BR Português (Brasil)、zh-Hans
+      简体中文。翻訳は AI によって生成されたため、不自然な表現があるかもしれません。
+  # Home Assistant Core is the main part of Home Assistant. Keep "Core".
+  collect_core:
+    name: Home Assistant Core のエラーを収集
+    description: >-
+      Home Assistant Core のエラーと警告を、トレースバックと一緒にホストのジャーナルから、ホスト
+      home-assistant として収集します。
+  # The Supervisor runs Home Assistant, its apps and updates. Keep "Supervisor".
+  collect_supervisor:
+    name: Supervisor のエラーを収集
+    description: >-
+      Home Assistant Supervisor のエラーと警告を、トレースバックと一緒にホストのジャーナルから、ホスト
+      home-assistant として収集します。
+  # The machine Home Assistant runs on, such as a Green or a Raspberry Pi.
+  collect_host:
+    name: ホストのエラーを収集
+    description: >-
+      ホスト自身のジャーナルから、クラッシュ、失敗したサービス、メモリ不足による強制終了、エラーをホスト
+      home-assistant として収集します。Home Assistant とアプリのログは別に収集するため、ここでは除外します。
+  # The Supervisor's own containers for DNS, audio and so on. Keep "Supervisor".
+  collect_plugins:
+    name: Supervisor プラグインのエラーを収集
+    description: >-
+      DNS やオーディオなど Supervisor のプラグインのエラーと警告をホストのジャーナルから、ホスト
+      home-assistant として収集します。レベルが書かれた行だけを読み取ります。DNS
+      は直す必要のあまりないログを多く出すため、オンにするまではオフです。
+  # Apps are what Home Assistant used to call add-ons.
+  collect_apps:
+    name: アプリのエラーを収集
+    description: >-
+      ほかのアプリのエラーと警告をホストのジャーナルから、ホスト home-assistant
+      として収集します。レベルが書かれた行だけを読み取ります。

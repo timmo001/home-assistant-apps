@@ -1,0 +1,81 @@
+# The app's option names and descriptions in Home Assistant, in English, which
+# every other translation follows. Keep the option keys as they are.
+#
+# Run `mise run translations:check` after changing a translation.
+---
+configuration:
+  # An admin token for setting up the server before any admin exists.
+  server_admin_token:
+    name: Server admin token
+    description: >-
+      An admin token the server always accepts, at least 32 characters, for
+      managing hosts, workers and admins with --server. It isn't stored or
+      listed. Leave it empty once you've added an admin of your own.
+  trust_proxy:
+    name: Trust reverse proxy
+    description: >-
+      Trust X-Forwarded-Host and X-Forwarded-For. Only turn this on when a
+      reverse proxy is the only way to reach the server.
+  # Decision models judge whether an issue is worth fixing.
+  decide_daily:
+    name: Daily decision limit
+    description: >-
+      The most issues each decision model may decide on in any 24 hours, by
+      the server and its workers together.
+  # Language models suggest fixes.
+  suggest_daily:
+    name: Daily suggestion limit
+    description: >-
+      The most fixes each language model may suggest in any 24 hours, by the
+      server and its workers together.
+  new_hours:
+    name: Hours an issue stays new
+    description: How long an issue counts as new after it's first seen.
+  # Quiet and regressed are issue states, as the web UI names them.
+  quiet_hours:
+    name: Hours before an issue goes quiet
+    description: >-
+      How long an issue can go without events before it's quiet. A resolved
+      issue that comes back also stays regressed for this long.
+  # Home Assistant shows the language codes as they are, so the description
+  # names them. Keep the language names in their own languages.
+  language:
+    name: Language
+    description: >-
+      The web UI's language: de Deutsch, en English, es Español, fr Français,
+      it Italiano, ja 日本語, nl Nederlands, pl Polski, pt-BR Português
+      (Brasil) or zh-Hans 简体中文. The translations are AI-generated, so
+      some may read oddly.
+  # Home Assistant Core is the main part of Home Assistant. Keep "Core".
+  collect_core:
+    name: Collect Home Assistant Core's errors
+    description: >-
+      Collect Home Assistant Core's errors and warnings, with their
+      tracebacks, from the host journal, as the host home-assistant.
+  # The Supervisor runs Home Assistant, its apps and updates. Keep "Supervisor".
+  collect_supervisor:
+    name: Collect the Supervisor's errors
+    description: >-
+      Collect the Home Assistant Supervisor's errors and warnings, with their
+      tracebacks, from the host journal, as the host home-assistant.
+  # The machine Home Assistant runs on, such as a Green or a Raspberry Pi.
+  collect_host:
+    name: Collect the host's errors
+    description: >-
+      Collect crashes, failed services, out-of-memory kills and errors from
+      the host's own journal, as the host home-assistant. Home Assistant's
+      and apps' logs are left out here, since they're collected on their own.
+  # The Supervisor's own containers for DNS, audio and so on. Keep "Supervisor".
+  collect_plugins:
+    name: Collect the Supervisor plugins' errors
+    description: >-
+      Collect the errors and warnings of the Supervisor's plugins, such as DNS
+      and audio, from the host journal, as the host home-assistant. Only lines
+      that give a level are read. DNS logs a lot that's rarely worth fixing,
+      so this is off unless you turn it on.
+  # Apps are what Home Assistant used to call add-ons.
+  collect_apps:
+    name: Collect apps' errors
+    description: >-
+      Collect your other apps' errors and warnings from the host journal, as
+      the host home-assistant. Only lines that give a level are read.
