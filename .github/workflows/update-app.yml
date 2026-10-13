@@ -1,0 +1,109 @@
+---
+name: Update app
+
+# An app's release sends repository_dispatch (app-release) with its repository
+# and tag once its image is pushed. Run it by hand for a first copy or a re-run.
+# yamllint disable-line rule:truthy
+on:
+  repository_dispatch:
+    types:
+      - app-release
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "The app's repository, such as timmo001/triage"
+        required: true
+        type: string
+      tag:
+        description: "The release tag"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# One update at a time, so two releases queue rather than race to push.
+concurrency:
+  group: update-app
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Update ${{ github.event.client_payload.repository || inputs.repository }} to ${{ github.event.client_payload.tag || inputs.tag }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REPOSITORY: ${{ github.event.client_payload.repository || inputs.repository }}
+      TAG: ${{ github.event.client_payload.tag || inputs.tag }}
+    steps:
+      # The Development ruleset blocks GITHUB_TOKEN from pushing to main, so
+      # this pushes with an admin's token, which can bypass it.
+      - name: Check out default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          token: ${{ secrets.RELEASE_COMMIT_TOKEN }}
+
+      - name: Find the app
+        run: |
+          set -euo pipefail
+          if ! [[ "$TAG" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*$ ]]; then
+            echo "::error title=Invalid tag::'$TAG' isn't a release tag."
+            exit 1
+          fi
+          folder="$(yq -r '.apps | to_entries[] | select(.value.repository == strenv(REPOSITORY)) | .key' apps.yml)"
+          if [ -z "$folder" ]; then
+            echo "::error title=Unknown app::$REPOSITORY isn't in apps.yml."
+            exit 1
+          fi
+          path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
+          printf 'FOLDER=%s\nAPP_PATH=%s\nSOURCE=%s\n' "$folder" "$path" "$RUNNER_TEMP/source" >> "$GITHUB_ENV"
+
+      - name: Check out the release
+        run: git clone --quiet --depth 1 --branch "$TAG" "https://github.com/$REPOSITORY.git" "$SOURCE"
+
+      # The Supervisor offers the version in config.yaml and pulls that image
+      # tag, so only copy a stable release whose image exists.
+      - name: Check the release, version and image
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "$(gh release view "$TAG" -R "$REPOSITORY" --json isPrerelease --jq .isPrerelease)" = "true" ]; then
+            echo "::error title=Prerelease::$TAG is a prerelease."
+            exit 1
+          fi
+          config="$SOURCE/$APP_PATH/config.yaml"
+          version="$(yq -r '.version' "$config")"
+          if [ "$version" != "${TAG#v}" ]; then
+            echo "::error title=Version mismatch::$APP_PATH/config.yaml has $version, the tag is $TAG."
+            exit 1
+          fi
+          image="$(yq -r '.image' "$config")"
+          docker buildx imagetools inspect "$image:$version" > /dev/null
+          printf 'NAME=%s\nVERSION=%s\n' "$(yq -r '.name' "$config")" "$version" >> "$GITHUB_ENV"
+
+      # CHANGELOG.md at the tag still holds the previous release's notes, so
+      # take this release's notes instead.
+      - name: Copy the app
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$FOLDER"
+          rsync -a --delete --exclude CHANGELOG.md "$SOURCE/$APP_PATH/" "$FOLDER/"
+          notes="$(gh release view "$TAG" -R "$REPOSITORY" --json body --jq .body)"
+          printf '%s\n' "$(printf '%s' "$notes" | tr -d '\r')" > "$FOLDER/CHANGELOG.md"
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git add -A -- "$FOLDER"
+          if git diff --cached --quiet; then
+            echo "$NAME $VERSION is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update $NAME to $VERSION"
+          git push

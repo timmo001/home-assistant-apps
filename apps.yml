@@ -1,0 +1,10 @@
+---
+# Apps copied into this repository. Each key is the app's folder here, and
+# matches its slug. path is the app's folder in its own repository.
+apps:
+  triage:
+    repository: timmo001/triage
+    path: home-assistant/app
+  opencode:
+    repository: timmo001/app-opencode
+    path: opencode

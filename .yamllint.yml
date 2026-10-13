@@ -1,0 +1,17 @@
+---
+extends: default
+
+# App folders are copied from each app's own repository, which lints them.
+ignore: |
+  triage/
+  opencode/
+
+rules:
+  document-start:
+    present: true
+    level: error
+  line-length: disable
+  truthy:
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
