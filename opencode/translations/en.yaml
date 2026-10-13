@@ -1,0 +1,34 @@
+---
+configuration:
+  server_password:
+    name: Server password
+    description: >-
+      Optional. OpenCode always has a password, on your network and through remote access: without
+      this, it makes a random one, and you sign in by pairing from the sidebar page. Set this only to
+      use your own password instead, with the username opencode.
+  remote_access:
+    name: Remote access
+    description: >-
+      Reach OpenCode from anywhere through OpenTunnel, at a private address. The connection is
+      encrypted end to end, so the tunnel's relay can't read it, and OpenCode still asks for its
+      password. Pair your devices from the sidebar page; the address alone doesn't let anyone in.
+  cors_origins:
+    name: Allowed origins
+    description: >-
+      Other web addresses allowed to call OpenCode from a browser, such as an OpenTunnel address
+      you already use (https://1a2b3c4d5e6f7a8b.abcd1234efgh.opentunnel.xyz) or your own proxy.
+      Origins only, with no path or trailing slash.
+  system_packages:
+    name: System packages
+    description: >-
+      Debian packages to install with apt each time the app starts, such as build-essential. They
+      install in the background once OpenCode is up. Packages that can't be found are skipped and
+      shown on the sidebar page.
+  tools:
+    name: Tools
+    description: >-
+      Developer tools to install with mise, as name, name@version or backend:name@version, such
+      as go@1.27 or npm:prettier@3. They're kept between restarts and updated with the app's
+      built-in tools.
+network:
+  49374/tcp: OpenCode on your network (web UI and API)
