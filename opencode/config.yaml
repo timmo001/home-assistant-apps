@@ -1,7 +1,7 @@
 ---
 name: OpenCode
 # Set to the release version at release time.
-version: 0.1.9
+version: 0.2.0
 slug: opencode
 description: An AI coding agent for your Home Assistant setup, powered by OpenCode
 url: https://github.com/timmo001/app-opencode
@@ -19,6 +19,11 @@ ports:
 ports_description:
   49374/tcp: OpenCode on your network (web UI and API)
 watchdog: tcp://[HOST]:[PORT:49374]
+# Reaches Home Assistant's MCP server through the Supervisor.
+homeassistant_api: true
+# The Supervisor's /core endpoints, which ha-bridge reads Core's journal through.
+hassio_api: true
+hassio_role: homeassistant
 map:
   - type: addon_config
     read_only: false
@@ -33,6 +38,8 @@ backup_exclude:
 options:
   remote_access: false
   cors_origins: []
+  home_assistant_mcp: true
+  ha_bridge: true
   system_packages:
     - build-essential
     - dnsutils
@@ -70,6 +77,9 @@ schema:
   remote_access: bool
   cors_origins:
     - match(^https?://[^/\s]+$)
+  home_assistant_mcp: bool
+  music_assistant_token: password?
+  ha_bridge: bool
   system_packages:
     - match(^[a-z0-9][a-z0-9+.-]+$)
   tools:

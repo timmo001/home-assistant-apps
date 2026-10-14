@@ -1,0 +1,51 @@
+---
+configuration:
+  server_password:
+    name: Server password
+    description: >-
+      Optional. OpenCode always has a password, on your network and through remote access: without
+      this, it makes a random one, and you sign in by pairing from the sidebar page. Set this only to
+      use your own password instead, with the username opencode.
+  remote_access:
+    name: Remote access
+    description: >-
+      Reach OpenCode from anywhere through OpenTunnel, at a private address. The connection is
+      encrypted end to end, so the tunnel's relay can't read it, and OpenCode still asks for its
+      password. Pair your devices from the sidebar page; the address alone doesn't let anyone in.
+  cors_origins:
+    name: Allowed origins
+    description: >-
+      Other web addresses allowed to call OpenCode from a browser, such as an OpenTunnel address
+      you already use (https://1a2b3c4d5e6f7a8b.abcd1234efgh.opentunnel.xyz) or your own proxy.
+      Origins only, with no path or trailing slash.
+  home_assistant_mcp:
+    name: Home Assistant MCP server
+    description: >-
+      Connect OpenCode to Home Assistant's MCP server, so the agent can read states and call
+      actions, along with the MCP servers Home Assistant connects to, such as other apps'. Needs
+      Home Assistant's Model Context Protocol integration, which you add in Home Assistant.
+  music_assistant_token:
+    name: Music Assistant token
+    description: >-
+      Optional. A long-lived token from Music Assistant's app, so the agent can use its API, and
+      its MCP server when that plugin is on. Create a long-lived access token in Music Assistant
+      under Settings > Profile. See the Documentation tab for how to set it up.
+  ha_bridge:
+    name: ha-bridge
+    description: >-
+      Run ha-bridge, so the agent can read and control Home Assistant from the shell: states,
+      actions, watches, automations, scripts and logs.
+  system_packages:
+    name: System packages
+    description: >-
+      Debian packages to install with apt each time the app starts, such as build-essential. They
+      install in the background once OpenCode is up. Packages that can't be found are skipped and
+      shown on the sidebar page.
+  tools:
+    name: Tools
+    description: >-
+      Developer tools to install with mise, as name, name@version or backend:name@version, such
+      as go@1.27 or npm:prettier@3. They're kept between restarts and updated with the app's
+      built-in tools.
+network:
+  49374/tcp: OpenCode on your network (web UI and API)
