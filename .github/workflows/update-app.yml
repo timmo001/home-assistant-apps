@@ -51,20 +51,20 @@ jobs:
             echo "::error title=Invalid tag::'$TAG' isn't a release tag."
             exit 1
           fi
-          folder="$(yq -r '.apps | to_entries[] | select(.value.repository == strenv(REPOSITORY)) | .key' apps.yml)"
-          if [ -z "$folder" ]; then
+          # A repository can have more than one app, such as two versions on one image.
+          folders="$(yq -r '[.apps | to_entries[] | select(.value.repository == strenv(REPOSITORY)) | .key] | join(" ")' apps.yml)"
+          if [ -z "$folders" ]; then
             echo "::error title=Unknown app::$REPOSITORY isn't in apps.yml."
             exit 1
           fi
-          path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
-          printf 'FOLDER=%s\nAPP_PATH=%s\nSOURCE=%s\n' "$folder" "$path" "$RUNNER_TEMP/source" >> "$GITHUB_ENV"
+          printf 'FOLDERS=%s\nSOURCE=%s\n' "$folders" "$RUNNER_TEMP/source" >> "$GITHUB_ENV"
 
       - name: Check out the release
         run: git clone --quiet --depth 1 --branch "$TAG" "https://github.com/$REPOSITORY.git" "$SOURCE"
 
       # The Supervisor offers the version in config.yaml and pulls that image
       # tag, so only copy a stable release whose image exists.
-      - name: Check the release, version and image
+      - name: Check the release, versions and images
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -73,32 +73,43 @@ jobs:
             echo "::error title=Prerelease::$TAG is a prerelease."
             exit 1
           fi
-          config="$SOURCE/$APP_PATH/config.yaml"
-          version="$(yq -r '.version' "$config")"
-          if [ "$version" != "${TAG#v}" ]; then
-            echo "::error title=Version mismatch::$APP_PATH/config.yaml has $version, the tag is $TAG."
-            exit 1
-          fi
-          image="$(yq -r '.image' "$config")"
-          docker buildx imagetools inspect "$image:$version" > /dev/null
-          printf 'NAME=%s\nVERSION=%s\n' "$(yq -r '.name' "$config")" "$version" >> "$GITHUB_ENV"
+          names=()
+          for folder in $FOLDERS; do
+            path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
+            config="$SOURCE/$path/config.yaml"
+            version="$(yq -r '.version' "$config")"
+            if [ "$version" != "${TAG#v}" ]; then
+              echo "::error title=Version mismatch::$path/config.yaml has $version, the tag is $TAG."
+              exit 1
+            fi
+            image="$(yq -r '.image' "$config")"
+            docker buildx imagetools inspect "$image:$version" > /dev/null
+            names+=("$(yq -r '.name' "$config")")
+          done
+          name="$(printf '%s and ' "${names[@]}")"
+          printf 'NAME=%s\nVERSION=%s\n' "${name% and }" "${TAG#v}" >> "$GITHUB_ENV"
 
       # CHANGELOG.md at the tag still holds the previous release's notes, so
-      # take this release's notes instead.
-      - name: Copy the app
+      # take this release's notes instead. -L copies what links point to, as an
+      # app folder can link to files in another.
+      - name: Copy the apps
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p "$FOLDER"
-          rsync -a --delete --exclude CHANGELOG.md "$SOURCE/$APP_PATH/" "$FOLDER/"
           notes="$(gh release view "$TAG" -R "$REPOSITORY" --json body --jq .body)"
-          printf '%s\n' "$(printf '%s' "$notes" | tr -d '\r')" > "$FOLDER/CHANGELOG.md"
+          for folder in $FOLDERS; do
+            path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
+            mkdir -p "$folder"
+            rsync -aL --delete --exclude CHANGELOG.md "$SOURCE/$path/" "$folder/"
+            printf '%s\n' "$(printf '%s' "$notes" | tr -d '\r')" > "$folder/CHANGELOG.md"
+          done
 
       - name: Commit
         run: |
           set -euo pipefail
-          git add -A -- "$FOLDER"
+          # shellcheck disable=SC2086
+          git add -A -- $FOLDERS
           if git diff --cached --quiet; then
             echo "$NAME $VERSION is already up to date."
             exit 0
