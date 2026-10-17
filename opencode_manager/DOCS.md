@@ -15,12 +15,20 @@ Both can use all of Home Assistant's own API. Anything the agent runs in the app
 
 ## Opening OpenCode
 
-Open **OpenCode** in the sidebar. The page there shows which OpenCode is running and signs you in with a link that works once, in a new tab. You don't need a password:
+Open **OpenCode** in the sidebar. The page there has three tabs, and opens on the one you used last:
+
+- **OpenCode** runs OpenCode's terminal app (TUI), connected to the app's server, so it shares sessions with the web app and your paired devices.
+- **Shell** is a terminal in `/data/home`.
+- **Connect** shows which OpenCode is running and signs you in to OpenCode's web app with a link that works once, in a new tab. You don't need a password.
+
+The terminals keep running when you leave the page, so you pick up where you were when you come back, from this browser or another. When the program in one ends, press Enter to start it again. Restarting OpenCode ends them both.
+
+On the **Connect** tab:
 
 - **Open on this network** opens OpenCode at your Home Assistant host's address, on port 49374. It's shown while that port is mapped in the app's **Network** settings.
 - **Open with remote access** opens OpenCode through OpenTunnel. It's shown when the `remote_access` option is on and the tunnel is up.
 
-OpenCode's web app can't run inside the sidebar itself, so it always opens in its own tab. Home Assistant Link (formerly Home Assistant Cloud) reaches the sidebar page from anywhere, but not OpenCode's own port, so away from home use remote access.
+OpenCode's web app can't run inside the sidebar itself, so it always opens in its own tab. Home Assistant Link (formerly Home Assistant Cloud) reaches the sidebar page, terminals included, from anywhere, but not OpenCode's own port, so away from home use remote access for the web app.
 
 ### Pairing another device
 
@@ -51,6 +59,8 @@ The app talks to Home Assistant through the Supervisor, with the app's own token
 #### Other apps' MCP servers
 
 Apps such as [Triage](https://github.com/timmo001/triage) can offer their own MCP server to Home Assistant. Once you've added it with Home Assistant's [Model Context Protocol Client](https://www.home-assistant.io/integrations/mcp/) integration, the app connects OpenCode to it too, through Home Assistant, named after the integration entry (for example `triage`). The list is read each time OpenCode starts, so after adding one, restart the app. This needs Home Assistant 2026.9 or newer.
+
+The app comes with Triage's skills, such as `triage-resolve`, which has the agent close the issues Triage collected once it has fixed them. They use Triage's MCP server, so add that first.
 
 ### `music_assistant_token`
 
