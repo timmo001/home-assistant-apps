@@ -91,7 +91,9 @@ jobs:
 
       # CHANGELOG.md at the tag still holds the previous release's notes, so
       # take this release's notes instead. -L copies what links point to, as an
-      # app folder can link to files in another.
+      # app folder can link to files in another. --checksum compares contents,
+      # as both checkouts can share a modified time and a new version is often
+      # the same size.
       - name: Copy the apps
         env:
           GH_TOKEN: ${{ github.token }}
@@ -101,7 +103,7 @@ jobs:
           for folder in $FOLDERS; do
             path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
             mkdir -p "$folder"
-            rsync -aL --delete --exclude CHANGELOG.md "$SOURCE/$path/" "$folder/"
+            rsync -aL --checksum --delete --exclude CHANGELOG.md "$SOURCE/$path/" "$folder/"
             printf '%s\n' "$(printf '%s' "$notes" | tr -d '\r')" > "$folder/CHANGELOG.md"
           done
 
