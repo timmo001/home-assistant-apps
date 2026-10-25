@@ -3,7 +3,7 @@
 # scripts/check-apps.ts allows may differ; everything else must match ../opencode/config.yaml.
 name: OpenCode (manager access)
 # Set to the release version at release time, with ../opencode/config.yaml.
-version: 0.3.4
+version: 0.4.0
 slug: opencode_manager
 description: >-
   OpenCode with the Supervisor's manager role, so the agent can read every log and manage
@@ -72,6 +72,7 @@ options:
   cors_origins: []
   home_assistant_mcp: true
   ha_bridge: true
+  hide_sidebar: true
   system_packages:
     - build-essential
     - dnsutils
@@ -100,6 +101,7 @@ options:
     - shellcheck
     - shfmt
     - starship
+    - usage
     - uv
     - watchexec
     - yq
@@ -112,6 +114,7 @@ schema:
   home_assistant_mcp: bool
   music_assistant_token: password?
   ha_bridge: bool
+  hide_sidebar: bool
   system_packages:
     - match(^[a-z0-9][a-z0-9+.-]+$)
   tools:

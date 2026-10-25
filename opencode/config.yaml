@@ -1,7 +1,7 @@
 ---
 name: OpenCode
 # Set to the release version at release time.
-version: 0.3.4
+version: 0.4.0
 slug: opencode
 description: An AI coding agent for your Home Assistant setup, powered by OpenCode
 url: https://github.com/timmo001/app-opencode
@@ -67,6 +67,7 @@ options:
   cors_origins: []
   home_assistant_mcp: true
   ha_bridge: true
+  hide_sidebar: true
   system_packages:
     - build-essential
     - dnsutils
@@ -95,6 +96,7 @@ options:
     - shellcheck
     - shfmt
     - starship
+    - usage
     - uv
     - watchexec
     - yq
@@ -107,6 +109,7 @@ schema:
   home_assistant_mcp: bool
   music_assistant_token: password?
   ha_bridge: bool
+  hide_sidebar: bool
   system_packages:
     - match(^[a-z0-9][a-z0-9+.-]+$)
   tools:

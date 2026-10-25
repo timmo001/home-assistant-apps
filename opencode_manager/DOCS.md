@@ -23,6 +23,8 @@ Open **OpenCode** in the sidebar. The page there has three tabs, and opens on th
 
 The terminals keep running when you leave the page, so you pick up where you were when you come back, from this browser or another. When the program in one ends, press Enter to start it again. Restarting OpenCode ends them both.
 
+The page takes the whole screen: Home Assistant hides its sidebar while it's open. Select the menu button at the start of the tabs to show the sidebar again. To keep the sidebar, turn off the [`hide_sidebar`](#hide_sidebar) option.
+
 On the **Connect** tab:
 
 - **Open on this network** opens OpenCode at your Home Assistant host's address, on port 49374. It's shown while that port is mapped in the app's **Network** settings.
@@ -89,6 +91,10 @@ Runs [Home Assistant Bridge](https://ha-bridge.timmo.dev) (`ha-bridge`), so the 
 
 Which logs it can read depends on which of the two apps you run. See [The two apps](#the-two-apps).
 
+### `hide_sidebar`
+
+Gives the sidebar page the whole screen, without Home Assistant's sidebar and header around it. The menu button at the start of the page's tabs shows the sidebar over the page when you need it. It's on by default; turn it off to keep Home Assistant's sidebar as it is on other pages.
+
 ### `system_packages`
 
 Debian packages to install with apt. The container's filesystem is reset on every start, so they're installed again each time. That happens in the background once OpenCode is up, so it doesn't hold up the start, but a package isn't there until the app's log says the install has finished: remove any you don't need. A package that can't be found is skipped, and shown on the sidebar page and in the app's log.
@@ -99,7 +105,7 @@ The default list is `build-essential`, `dnsutils`, `ffmpeg`, `iputils-ping`, `rs
 
 Developer tools to install with [mise](https://mise.jdx.dev), as `name`, `name@version` or `backend:name@version`, such as `go@1.27` or `npm:prettier@3`. They're installed once and kept between restarts. Without a version, you get the newest, and the app keeps it up to date. A tool mise can't install is skipped, and shown on the sidebar page and in the app's log.
 
-The default list is `actionlint`, `bat`, `deno`, `eza`, `fd`, `fzf`, `go`, `hyperfine`, `just`, `lazygit`, `npm:skills`, `pitchfork`, `pnpm`, `pypi:yamllint`, `python`, `ruff`, `shellcheck`, `shfmt`, `starship`, `uv`, `watchexec`, `yq` and `zoxide`. These come with the app, so they're ready without downloading anything. Remove any you don't want and they're gone on the next start.
+The default list is `actionlint`, `bat`, `deno`, `eza`, `fd`, `fzf`, `go`, `hyperfine`, `just`, `lazygit`, `npm:skills`, `pitchfork`, `pnpm`, `pypi:yamllint`, `python`, `ruff`, `shellcheck`, `shfmt`, `starship`, `usage`, `uv`, `watchexec`, `yq` and `zoxide`. These come with the app, so they're ready without downloading anything. Remove any you don't want and they're gone on the next start.
 
 ## Preinstalled tools
 
@@ -121,7 +127,7 @@ OpenCode's terminal runs bash with tab completion that cycles through matches, a
 - `fzf` and `bat`: `Ctrl+R` searches your history, and `ff` finds a file with a preview
 - `lazygit`: `lg`
 
-There are short Git aliases too, such as `g` for `git`. To change the prompt, add `/data/home/.config/starship.toml`. For your own aliases, add `/data/home/.bash_profile`, which the terminal reads after the app's defaults.
+There are short Git aliases too, such as `g` for `git`. To change the prompt, add `/data/home/.config/starship.toml`. For your own aliases, add `/data/home/.bash_profile`, which the terminal reads after the app's defaults. Your own commands can go in `/data/home/.local/bin`, which comes first on `PATH` for the terminal and the agent.
 
 ## Updates
 
