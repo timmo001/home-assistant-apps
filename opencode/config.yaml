@@ -1,7 +1,7 @@
 ---
 name: OpenCode
 # Set to the release version at release time.
-version: 0.5.1
+version: 0.5.2
 slug: opencode
 description: An AI coding agent for your Home Assistant setup, powered by OpenCode
 url: https://github.com/timmo001/app-opencode
@@ -100,7 +100,8 @@ options:
     - pitchfork
     - pnpm
     - pypi:yamllint
-    - python
+    # Home Assistant Core's Python, which Renovate keeps in step. A newer one can lack wheels.
+    - python@3.14
     - ruff
     - shellcheck
     - shfmt
