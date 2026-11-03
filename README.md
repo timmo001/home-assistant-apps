@@ -9,6 +9,7 @@ All my Home Assistant apps in one repository. Add it once to get every app below
 | [Triage](https://github.com/timmo001/triage) | Collect crashes and errors from your machines, and decide which are worth fixing |
 | [OpenCode](https://github.com/timmo001/app-opencode) | An AI coding agent for your Home Assistant setup, powered by OpenCode |
 | [OpenCode (manager access)](https://github.com/timmo001/app-opencode) | OpenCode with the Supervisor's manager role, so the agent can read every log and manage your apps and host |
+| [Upkeep](https://github.com/timmo001/upkeep) | Keep your repositories and their consumers up to date |
 
 Each app also has its own repository you can add instead. Add this repository or an app's own repository, not both. Home Assistant treats them as different apps, so moving between them starts with empty settings and data, and a backup restores only to the repository it came from.
 

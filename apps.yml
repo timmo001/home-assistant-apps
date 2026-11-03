@@ -11,3 +11,6 @@ apps:
   opencode_manager:
     repository: timmo001/app-opencode
     path: opencode_manager
+  upkeep:
+    repository: timmo001/upkeep
+    path: home-assistant/app
