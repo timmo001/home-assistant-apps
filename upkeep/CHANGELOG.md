@@ -1,19 +1,24 @@
 ## Jobs
 
-- A worker now runs jobs in three lanes at once, so a long job no longer holds up the schedule. Heals, which can run a fix agent for a long while, have a lane of their own. The quick jobs that only call APIs (`releases`, `labels`, `notifications` and `digest`) share another. The jobs that clone and push to repositories (`bump`, `drift` and `stalled-updates`) take turns in the third, so two never push to the same repository at once. Before this, a heal could leave notifications and everything else queued behind it for as long as its agent ran.
-- Heal decisions are only capped when the worker's config sets `decisionsPerDay`. A worker using the `opencode` provider defaults to 300 a day.
+- A `bump` of a release that nothing uses now ends `skipped` instead of `succeeded`, with a log line saying there's nothing to bump. Before, every release of every repository left a successful bump run behind, even for repositories with no consumers, such as Upkeep's own releases.
+- Workers report a run that found nothing to do as `skipped`, a new run state alongside `succeeded`, `failed` and `cancelled`. Skipped runs are pruned like any other finished run.
 
 ## Dashboard
 
-- A queued run's page shows its lane and what it's waiting for: the runs going in that lane, each linked with the worker running it, and how many are queued before it. When nothing in its lane is running, it says it's waiting for a worker to take it.
-- The runs table shows which lane a queued run is waiting in, where the worker would otherwise be.
+- The header shows the server's version next to the Upkeep name, so you can see which release is installed without opening Home Assistant.
+- Release links open in a new tab and carry an external link icon, with screen reader text saying they open in a new tab.
+- The list of every job's runs leaves out skipped runs, so it only shows runs that did something. A job's own page still lists them, with a grey "skipped" badge.
 
 ## Server
 
-- Each job in the jobs list carries its lane.
+- `GET /api/version` returns the server's version. It needs no token.
+
+## CLI
+
+- `upkeep --version` and the MCP server report the real version: the release for the Home Assistant app, the package version (such as `0.0.0.r87.gabc1234`) for `upkeep-git`, or `dev` from source. Before, both always said `0.0.0`.
 
 ## Internals
 
-- The worker's status file lists every job running across its lanes, and its writes take turns.
+- Builds bake the version in through `UPKEEP_BUILD_VERSION`: the Release workflow passes the tag to the container build, and the Arch package passes its `pkgver`.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.7...0.1.8
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.8...0.1.9
