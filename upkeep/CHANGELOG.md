@@ -1,16 +1,16 @@
 ## Jobs
 
-- **New `renovate` job, hourly.** It takes over open Renovate pull requests that stalled because their checks failed. Each update is squashed onto a clean clone of the default branch, its dependencies installed, and the repository's checks run. It's then pushed straight to the default branch, the pull request is closed with a comment linking the commit, and the commit's CI is watched.
-- **What it leaves to Renovate:** drafts, forks, archived repositories, pull requests into other branches, abandoned updates and Renovate's onboarding. It also leaves pull requests whose checks pass or are still running.
-- **When a repository fails:** the others carry on, and the run fails at the end naming the ones that failed. Each gets its own heal, and the heal's agent is told to apply the update, migrate whatever the new version needs, push and close the pull request.
-- **Dry runs:** set `UPKEEP_RENOVATE_DRY_RUN=true` on a worker to log what would be pushed without committing. Clones are kept in `upkeep/renovate` in the XDG cache directory, apart from the `bump` job's.
+- **The `renovate` job is now `stalled-updates`.** It isn't tied to Renovate any more: it takes over Dependabot pull requests whose checks failed as well as Renovate ones, finding them by author rather than by branch prefix, so a repository's `branchPrefix` or other updater config makes no difference. Onboarding pull requests are spotted by their title or a `/configure` branch. Its clones move to `upkeep/stalled-updates` in the XDG cache, and the dry-run setting is now `UPKEEP_STALLED_UPDATES_DRY_RUN`.
+- **Pull requests that conflict with the default branch are left for their updater to rebase**, rather than failing the run. GitHub's mergeable flag is checked first, and a conflict found while squashing is left the same way.
+- **A dry run no longer fails.** It logs the repositories it would have failed in, so it queues no heals whose agents would push for real.
 
-## CLI
+## Server
 
-- The CLI reads `UPKEEP_SERVER` and `UPKEEP_ADMIN_TOKEN` from `admin.env` in `$XDG_CONFIG_HOME/upkeep` when the environment doesn't set them, so the MCP server and OpenCode plugin find the server however they're started. The environment still wins.
+- **Heals are limited per target, not per job.** `UPKEEP_HEALS_PER_DAY` now applies to each repository a job fails in, so one repository failing all day no longer parks the job for the rest; that repository just gets no more heals until tomorrow. A job failing in itself is still parked once it passes the limit.
 
 ## Internals
 
-- The `bump` job's checkout, install, check, commit-and-push and CI watch helpers are shared, so `renovate` runs updates exactly as a bump does.
+- Release, dev server and workspace package guidance moved out of AGENTS.md into the repository's `upkeep-release`, `upkeep-dev-servers` and `upkeep-packages` skills.
+- New app releases are installed through the ha-bridge tools.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.3...0.1.4
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.4...0.1.5
