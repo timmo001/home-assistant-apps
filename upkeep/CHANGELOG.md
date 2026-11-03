@@ -1,3 +1,1 @@
-Dashboard fixes from the first browser check: sign-in shows once, production Lit build, favicon, and table cells no longer wrap.
-
-Releases are now tagged with the bare version, with no `v`.
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.1...0.1.2
