@@ -1,6 +1,6 @@
 ---
 name: Upkeep
-version: 0.1.9
+version: 0.1.10
 slug: upkeep
 description: Keep your repositories and their consumers up to date
 url: https://github.com/timmo001/upkeep
@@ -20,6 +20,9 @@ watchdog: http://[HOST]:[PORT:7272]/api/health
 # Stopped during backups so the SQLite database is copied in a consistent
 # state. Workers retry until the server is back.
 backup: cold
+# Reads the Supervisor's info on this app and the triage app beside it, to
+# find triage on the Supervisor's network.
+hassio_api: true
 options:
   heals_per_day: 3
   keep_days: 30
