@@ -1,16 +1,16 @@
 ## Jobs
 
-- Heals no longer send a message for every failure when the worker has no decision model. Those failures are recorded and left for the evening digest, so one bad stalled-updates run doesn't post a message per repository.
-- A heal message, sent when a decision model leaves a failure for a person or parks a job, now quotes the log lines about its own target. For a run over many repositories, like stalled-updates or bump, that's the one consumer's failed check and the pull request it took over, not the run's list of every failure with a stack trace.
-- The message says how the job goes on for that target: the next run picks a consumer up again once it's fixed, `upkeep unpark` only shows up when the job was parked, and the triage issue when there is one.
-- The decision model reads the same per-target log lines, so it chooses from that consumer's failure, not the run's whole tail.
+- New `drift` job, every 6 hours, taking over from tooling-drift and its shared workflow. It finds the repositories with a `tooling.yml` at their root and checks each tool against its latest release, or its newest matching tag with `tags` or `prereleases`. The `tooling.yml` format is unchanged, so existing files work as they are.
+- When a tool moved and only its pins change after its `update` command runs, the move is committed as `Update <repo> to <tag>`, pushed straight to the default branch and its CI watched. No pull requests.
+- When the update changes anything else, or the tool has no `update` command, nothing is pushed for it. The run logs what to review (the tool's `review` note, the release notes and the compare link) and fails for that repository, so a heal hands the review to an agent, which records the new tag once it's done.
+- `UPKEEP_DRIFT_DRY_RUN=true` logs what would be pushed without pushing or failing for reviews. Clones live in `upkeep/drift` in the XDG cache directory.
 
-## Workers
+## Heals
 
-- A worker writes its own status to `$XDG_STATE_HOME/upkeep/worker-status.json` (or `$UPKEEP_WORKER_STATUS`): a health, a one-line summary and when it was updated. The summary says what's running, how the last run ended, which jobs are parked and how many heals in the last day were left for a person. It's `warning` while something needs a person and `degraded` while the server can't be reached, so a service monitor can show more than the process being up.
+- The Inbox only hears about a heal when there's something for you to do: a job it parked, or a fix an agent left unfinished, with the Herdr pane or `opencode2 --session` to pick it up from. Each message is an action item saying what to do and what was tried, with that target's own log lines. Everything else, including fixes an agent finished and pushed, goes in the evening digest only.
+- When the decision model isn't sure what went wrong (`ask`), the last agent in the list, the one for hard fixes, works on it, rather than it waiting for a person.
+- A new `"provider": "opencode"` decision model asks an LLM through OpenCode (`opencode2 run` with a `provider/model`) for the same choices, for a worker with no local decision model.
+- `decisionsPerDay` in the worker's `heal` settings caps how many heals a day the decision model chooses, 10 by default, so a shared free tier keeps some room. Past the cap, heals wait for the digest.
+- When the decision model fails (an error or a bad answer), the heal falls back as if there were no model, rather than failing.
 
-## Server
-
-- New worker endpoint `GET /work/parked` lists the parked jobs with their reason, when they were parked and their triage issue, for the worker's status.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.5...0.1.6
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.1.6...0.1.7
