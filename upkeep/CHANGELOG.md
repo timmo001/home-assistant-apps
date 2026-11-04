@@ -1,12 +1,24 @@
+## Dashboard
+
+- The overview opens with the last day in a line: how runs ended, how many commits were pushed to how many repositories, and what needs you, with links.
+- A **Recent commits** list shows each commit Upkeep pushed: the repository, the linked SHA, its subject and the run that pushed it.
+- The runs list has a **What it did** column and a **needs you** badge.
+- A run's page shows its summary, the commits it pushed and a needs-you badge. A heal's commit links to GitHub.
+
 ## Jobs
 
-- **New `ci` job** (timmo001/upkeep#35): every hour it reads the latest finished run of each workflow on each tracked repository's default branch. Pull request and cancelled runs don't count. When one failed, it logs the end of the failed steps, then runs the repository's checks in a clean clone and logs how they went: whether installing changed a lockfile (so a frozen install in CI fails), whether the checks fail here too, or whether it fails only in CI. The run fails naming the red repositories, so each gets a heal. It's off for repositories already tracked until they're opted into `ci`.
-- **Dismissed CI notifications:** once a workflow passes again on the default branch, the `ci` job dismisses its unread "workflow run failed" notifications.
+- bump, drift, stalled-updates, ci, deps, labels, notifications and releases write a one-line summary naming the repositories they changed or failed on, and record every commit they push.
+- A heal records every commit its agent pushed, with the agent's closing words as its summary.
+- Heals open as named panes (job and repository) in one `Upkeep heals` Herdr workspace, not as an unnamed workspace each. A finished fix closes its pane.
+- An agent ends with an outcome: fixed, nothing to fix, or needs you. Only "needs you", a stop or a timeout reaches the Inbox, and that message carries what the agent found, not the raw CI log.
 
-## Heals
+## Server
 
-- A fix agent for a `ci` failure is told to tell a real failure from a CI-only one, fix the cause, push and watch CI until it passes.
-- A fix agent now gets only its own repository's lines from a failed run over many repositories, rather than the end of the whole log.
-- When the decision model errors, the heal now says the model couldn't choose, instead of saying there's no decision model.
+- Runs carry `summary`, `changes` and `attention`. Workers report them through `POST /api/work/runs/:id/report`.
+- `GET /api/activity?hours=24` returns the last day's run counts, commits and the runs that need a person.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.2.1...0.3.0
+## CLI
+
+- An `activity` tool in MCP and Code Mode.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.3.0...0.4.0
