@@ -1,11 +1,11 @@
-A fix for the inbox's first hour: it showed routine updates as worth reading.
+The dashboard is now built from groundwork's standard components, and each inbox entry says what changed.
 
-## Jobs
+## Dashboard
 
-- `watch` folds a bot's commit away as routine unless it touches source code, such as Renovate's updates and releases mirrored to another repository. A submodule moved to another commit, any `.lock` or `-lock.yaml` file and mise's `config.toml` count as routine too.
+- Groundwork's app bar, with the Inbox and Jobs links, folds into a menu on a phone. Pages open with groundwork's page header.
+- Inbox entries are groundwork expansion panels that lead with what was done instead of "Your commits to …": the repository and its newest change worth reading, then the next few and how many more. Releases say where they went, and updates which repositories they reached. Opening one lists every commit and marks it read.
+- The summary names where you pushed, busiest first, with counts.
+- Needs you uses groundwork's alert, with the button that settles it, the run and Dismiss.
+- The count beside Inbox and the one under the heading agree: both count unread changes worth reading.
 
-## Server
-
-- The inbox starts again once, so the commits it already had are read again with the new rules: the server fills it from the last 48 hours of run commits, and the next `watch` run adds the rest.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.0...0.6.1
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.1...0.6.2
