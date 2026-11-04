@@ -1,7 +1,7 @@
-A tidier filters sheet.
+Run logs are easier to reach.
 
 ## Dashboard
 
-- The Repositories filter no longer has an icon by its name, matching the Read filter.
+- Pressing anywhere in a run's row, on the Jobs page or a job's page, opens the run and its log. The links in the row, such as its job or release, still go where they did.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.5...0.6.6
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.6...0.6.7
