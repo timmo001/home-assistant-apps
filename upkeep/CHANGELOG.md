@@ -1,16 +1,15 @@
+## Jobs
+
+- **Attention**, a new job that collects the pull requests, issues and notifications that involve you from GitHub every 15 minutes, in place of the old daily brief. It sorts each one by its signals (review requested, changes requested, failing checks, conflicts, a new reply, blocked, gone quiet) with no model involved, and logs only what moved since the last run. Searches, work sites and exclusions come from the worker's `attention` config, and an optional work-time command decides the default view.
+
 ## Dashboard
 
-- The Jobs page has an Agents section: each worker's decision model and fix agents, with their model, variant, role and what each is for, so you can see which model would take a fix before one happens.
-- A heal's run page shows the decision model that chose, on its own line, or that the fallback chose without one.
-- A summary run's page shows the model and variant that wrote it.
+- **Attention page**, grouping items by piece of work (stacks, linked issues and outside waits) into Needs you, Blocked, Going stale and Waiting on others, with Your backlog and Watching folded away. A Work, Personal or All filter defaults by work time, and items new since you last looked, on any device, are marked. Opening the page queues a fresh collection when the last one is more than 5 minutes old.
+- Pages load with skeletons shaped like their content instead of a spinner.
+- A request that's still retrying is no longer restarted by every 5-second poll, so a failure now shows instead of loading forever.
 
 ## Server
 
-- Workers send their agents when they ask for work, and `GET /api/jobs/agents` lists them.
-- Heals record `decidedBy`, and summary runs record their `agent`. Older heals have `decidedBy` filled in from their reason.
+- Stores attention items and groups, with a shared "last looked" time, and serves them at `/api/attention`.
 
-## Worker
-
-- Sends its decision model and agents with each claim, and reports the decision model on a heal and the agent on a summary run. Update the worker after the server, since it reads the new run fields.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.8.1...0.9.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.9.0...0.10.0
