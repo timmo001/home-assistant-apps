@@ -1,9 +1,16 @@
+## Dashboard
+
+- The Jobs page has an Agents section: each worker's decision model and fix agents, with their model, variant, role and what each is for, so you can see which model would take a fix before one happens.
+- A heal's run page shows the decision model that chose, on its own line, or that the fallback chose without one.
+- A summary run's page shows the model and variant that wrote it.
+
 ## Server
 
-- A release that arrives while its job is parked or paused is held rather than dropped, keeping the latest per job and repository. Unparking the job, by hand or when its triage issue resolves, or resuming it queues what was held. Before this, a release during a parked spell never reached its consumers until it was run by hand.
+- Workers send their agents when they ask for work, and `GET /api/jobs/agents` lists them.
+- Heals record `decidedBy`, and summary runs record their `agent`. Older heals have `decidedBy` filled in from their reason.
 
-## Internals
+## Worker
 
-- Updates `@timmo001/groundwork-tokens` and `@timmo001/groundwork-ui` to 0.9.36.
+- Sends its decision model and agents with each claim, and reports the decision model on a heal and the agent on a summary run. Update the worker after the server, since it reads the new run fields.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.8.0...0.8.1
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.8.1...0.9.0
