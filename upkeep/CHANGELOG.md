@@ -1,3 +1,1 @@
-- The Attention context job (`attention-context`): every three hours, an agent writes a one-line note on each urgent item that changed, with an optional recheck date that keeps it out of Going stale, a follow-up on a group when one of its items closes, and suggested groups to accept or dismiss.
-- A Comment button on each item and group tells the agent something and queues a run; its answer shows under the comment, and a standing instruction becomes one of the Agent rules.
-- `attention.agent` in the worker's config picks the model, or the first of `heal.agents` without it.
+- The daily heal digest is gone from the Inbox. Heals that need you still show on the dashboard and as an Upkeep signal on the Attention page, and a heal that leaves you something to do still asks in the Inbox.
