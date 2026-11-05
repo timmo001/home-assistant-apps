@@ -1,15 +1,10 @@
-## Jobs
-
-- **Command**, a new job that does one thing on GitHub when asked, run by a worker. The first is marking a notification read. The same command still waiting isn't queued twice, and a failed one is never retried by a heal.
-- **Attention** leaves out items carrying a label listed in the worker's `attention.ignoreLabels`, along with their notifications.
-
 ## Dashboard
 
-- **Hide** on each Attention item takes it out of its section until anything about it changes. Hidden items sit in a folded Hidden section, where Show brings them back.
-- **Mark read** on items with an unread notification marks it read on GitHub through a worker. The page shows it read straight away instead of after the next collection.
+- **Refresh** on the Attention page is disabled while a refresh would collect nothing, within 5 minutes of the last collection, and says how long is left. Before, a click in that window silently did nothing.
 
 ## Server
 
-- `POST /api/attention/commands` queues a command, and `POST /api/attention/hide` hides or shows an item.
+- Stores groups of work for the Attention page: the items in each, what each waits on outside GitHub, your comments to the agent and its standing rules. New endpoints under `/api/attention` create, change and remove them, and the page data now includes them. The page itself starts using them in a later release.
+- `/api/attention` says when a refresh can next collect.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.10.0...0.11.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.11.0...0.12.0
