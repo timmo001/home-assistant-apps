@@ -1,14 +1,9 @@
-## Dashboard
-
-- The inbox groups every version of the same update into one entry, such as "Update Upkeep" with each version it moved to as an item, rather than an entry per version. Existing entries are merged when the server starts.
-- The line above the agent's summary names what it covers, such as "An agent summarised the last 7 days, from 29 October to 5 November, 2 minutes ago", or the unread entries and their dates.
-
-## Jobs
-
-- `summary` gives the agent the dates it covers and whether they're the unread entries or the last 7 days, and has it name that period first rather than writing "this week". The period is recorded on the run.
-
 ## Server
 
-- Runs carry a `period`, the stretch of the inbox a summary covers. The server and the summary job share one inbox window, `inboxDays`, so they can't drift apart.
+- A release that arrives while its job is parked or paused is held rather than dropped, keeping the latest per job and repository. Unparking the job, by hand or when its triage issue resolves, or resuming it queues what was held. Before this, a release during a parked spell never reached its consumers until it was run by hand.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.7.2...0.8.0
+## Internals
+
+- Updates `@timmo001/groundwork-tokens` and `@timmo001/groundwork-ui` to 0.9.36.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.8.0...0.8.1
