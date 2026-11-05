@@ -1,7 +1,6 @@
 ## Dashboard
 
-- The Jobs page and every list of runs no longer jump about. Their columns have fixed widths, so they keep their size as you scroll, as runs are queued, start and finish, and as jobs are paused, resumed or parked.
-- Each run takes one line, so rows keep the same height. Text that doesn't fit ends in an ellipsis, with the whole of it in the tooltip, and "What it did" takes the space the other columns leave.
-- A parked job's buttons wrap within the Jobs table's actions column instead of widening it.
+- No page scrolls sideways past the window any more. Between 600 and 900 pixels wide the app bar's Sign out button sat off the edge on every page; the page links now fold into the menu below 900 pixels, so everything fits.
+- On a phone, the Attention page's "Since you last looked" line wraps instead of pushing the page wider, and its scope and Collect controls drop below the title instead of squeezing it.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.16.1...0.16.2
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.16.2...0.16.3
