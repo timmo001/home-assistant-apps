@@ -1,15 +1,15 @@
 ## Jobs
 
-- **Attention**, a new job that collects the pull requests, issues and notifications that involve you from GitHub every 15 minutes, in place of the old daily brief. It sorts each one by its signals (review requested, changes requested, failing checks, conflicts, a new reply, blocked, gone quiet) with no model involved, and logs only what moved since the last run. Searches, work sites and exclusions come from the worker's `attention` config, and an optional work-time command decides the default view.
+- **Command**, a new job that does one thing on GitHub when asked, run by a worker. The first is marking a notification read. The same command still waiting isn't queued twice, and a failed one is never retried by a heal.
+- **Attention** leaves out items carrying a label listed in the worker's `attention.ignoreLabels`, along with their notifications.
 
 ## Dashboard
 
-- **Attention page**, grouping items by piece of work (stacks, linked issues and outside waits) into Needs you, Blocked, Going stale and Waiting on others, with Your backlog and Watching folded away. A Work, Personal or All filter defaults by work time, and items new since you last looked, on any device, are marked. Opening the page queues a fresh collection when the last one is more than 5 minutes old.
-- Pages load with skeletons shaped like their content instead of a spinner.
-- A request that's still retrying is no longer restarted by every 5-second poll, so a failure now shows instead of loading forever.
+- **Hide** on each Attention item takes it out of its section until anything about it changes. Hidden items sit in a folded Hidden section, where Show brings them back.
+- **Mark read** on items with an unread notification marks it read on GitHub through a worker. The page shows it read straight away instead of after the next collection.
 
 ## Server
 
-- Stores attention items and groups, with a shared "last looked" time, and serves them at `/api/attention`.
+- `POST /api/attention/commands` queues a command, and `POST /api/attention/hide` hides or shows an item.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.9.0...0.10.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.10.0...0.11.0
