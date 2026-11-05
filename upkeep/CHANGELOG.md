@@ -1,11 +1,14 @@
+## Dashboard
+
+- The inbox groups every version of the same update into one entry, such as "Update Upkeep" with each version it moved to as an item, rather than an entry per version. Existing entries are merged when the server starts.
+- The line above the agent's summary names what it covers, such as "An agent summarised the last 7 days, from 29 October to 5 November, 2 minutes ago", or the unread entries and their dates.
+
 ## Jobs
 
-- `deps` stops listing a dependency's releases and tags once it reaches the version in use, so a repository's updates take a page or two of reads rather than its whole history.
-- `ci` keeps each repository's details and workflow list between runs and asks for them again conditionally, so a repository that hasn't changed costs no rate limit.
-- `watch` checks each default branch's newest commit conditionally and only lists commits on branches that moved since its last run. READMEs for repository titles are read conditionally too. A run that fails keeps nothing, so the next one reads everything again.
+- `summary` gives the agent the dates it covers and whether they're the unread entries or the last 7 days, and has it name that period first rather than writing "this week". The period is recorded on the run.
 
-## Internals
+## Server
 
-- The conditional-GET cache from 0.7.1 is now shared by `deps`, `ci` and `watch`, each keeping its responses in `$XDG_CACHE_HOME/upkeep/<job>/github.json`.
+- Runs carry a `period`, the stretch of the inbox a summary covers. The server and the summary job share one inbox window, `inboxDays`, so they can't drift apart.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.7.1...0.7.2
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.7.2...0.8.0
