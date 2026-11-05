@@ -1,6 +1,9 @@
 ## Dashboard
 
-- No page scrolls sideways past the window any more. Between 600 and 900 pixels wide the app bar's Sign out button sat off the edge on every page; the page links now fold into the menu below 900 pixels, so everything fits.
-- On a phone, the Attention page's "Since you last looked" line wraps instead of pushing the page wider, and its scope and Collect controls drop below the title instead of squeezing it.
+- The Attention page no longer scrolls sideways past the window when "Since you last looked" lists changes. Each link's hidden "opens in a new tab" label for screen readers sat where the cut-off line would have ended, often thousands of pixels to the right, and stretched the page. The labels now stay inside the line, and the same goes for cut-off links anywhere else, such as a run's release.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.16.2...0.16.3
+## Internals
+
+- Updated @timmo001/docs-kit to 0.9.37 for the docs site.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.16.3...0.16.4
