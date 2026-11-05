@@ -1,18 +1,16 @@
-An agent can write up the inbox on request, and entries lead back to the jobs behind them.
-
 ## Dashboard
 
-- The inbox's summary card has **Summarise in more detail**, which asks an agent for a longer write-up of what's unread and shows it in the card. The few sentences above it are still written by plain code.
-- An opened inbox entry, on the inbox or a repository's page, links to the job behind it and, while it's kept, its run.
-- Jobs show by their names, such as Watch, and run states, triggers and lanes are capitalised. The run page's facts line up with their labels, and a job page's Back goes to Jobs.
+- The inbox's kind tabs now show unread out of total, such as `Worth reading 12/65`, so you can see what's left to read in each kind at a glance.
 
 ## Jobs
 
-- A new `summary` job, run on request, asks the first of the worker's `heal.agents` for the write-up through OpenCode.
-- Commands a worker runs get no stdin, so `opencode run` no longer waits on it.
+- `ci` leaves dynamic runs, such as Dependabot Updates, out of a repository's CI, so a failed Dependabot run no longer marks it red or queues a heal.
+- `ci` only counts active workflows, and leaves cleanup steps out of its logs.
+- Bumps can update pnpm lockfiles with `CI` set.
+- Checks on a clean clone run with `mise run --force`, so installs aren't skipped.
 
 ## Server
 
-- Inbox entries carry `runJob`, the job of their run, and workers can read the inbox from `GET /api/work/inbox`.
+- The heal limit is now described as it works: each job gets `heals_per_day` heals for each repository, or for itself, in any 24 hours. The app option's description, the docs and the server's log messages say so.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.7...0.6.8
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.8...0.6.9
