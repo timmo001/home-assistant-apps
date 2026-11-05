@@ -1,1 +1,4 @@
-- The daily heal digest is gone from the Inbox. Heals that need you still show on the dashboard and as an Upkeep signal on the Attention page, and a heal that leaves you something to do still asks in the Inbox.
+- Start an agent from Attention on an item or a group, on a worker with `attention.launch`, with a brief of where it stands: signals, description, unresolved review threads, failing checks with their logs, linked issues, the rest of its group, the context agent's notes and your comments (timmo001/upkeep#72).
+- Commands for one worker are only claimed by that worker.
+- Group cards on Attention collapse to their heading, remembered per browser.
+- Notes wrap beside their icon.
