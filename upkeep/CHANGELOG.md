@@ -1,13 +1,26 @@
-## Server
+## Jobs
 
-- A heal held back by the heal limit now waits instead of being dropped. When a repository has used its heals for the last 24 hours, its heal is stored and queued once its oldest heal is a day old, so a failed bump no longer sits until the next release. A later run of the same job that reaches the repository drops the waiting heal, as does its failed run being pruned. A paused or parked `heal` keeps it waiting.
+- **deps**: the planner now picks versions the way Renovate does. A tag pin only moves to a tag of the same precision (`v4` stays a major tag), an action pinned to a bare commit with no version comment is left alone, and a bun range resolves to the highest version in range up to `latest`.
+- **deps**: Upkeep's dependency groups can be applied and pushed, behind a dry run. Repositories in `deps.apply` get their changes pushed once `deps.dryRun` is `false`; everything else is only planned.
+- **deps**: closes Renovate's pull request for a group Upkeep has applied, checks for drift between repositories, and hands failed groups to heal.
+- **heal**: when the agent can't start because of a GitHub rate limit, the heal waits for the limit to reset (up to an hour) and tries again. A network error or GitHub 5xx backs off 1, 2, then 4 minutes. Once an agent's session exists it's never started twice.
 
 ## Dashboard
 
-- A job's page lists the heals waiting on the heal limit, with the repository, the failed run and when it started waiting.
+- The run page has **Run again** (or **Heal again**) for any finished run, which takes you to the new run, and **Dismiss** when a run needs you.
+- Dismissing a heal's inbox entry now clears every heal it stands for, not only the latest.
 
-## Docs
+## Server
 
-- The heal limit docs and the app's `heals_per_day` option say a repository past it has its heal held rather than skipped.
+- New admin endpoints `POST /api/runs/:id/retry` and `POST /api/runs/:id/dismiss`. Retry queues the run's job again for the same release, or a heal as the same heal even when the job is parked, and dismisses the old run. It answers 409 while the run is still queued or running.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.10...0.6.11
+## CLI
+
+- `upkeep retry <run>` and `upkeep dismiss <run>`, plus matching `retry` and `dismiss` agent tools.
+
+## Internals
+
+- A failed gh command now says why in run errors, heal records and logs: gh's stderr, or the API's message when stderr is empty, instead of a bare `GhCommandError`.
+- Updated `@timmo001/effect-gh` to 0.10.1.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.6.11...0.7.0
