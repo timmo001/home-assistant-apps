@@ -1,24 +1,20 @@
-## Heals
+## Jobs
 
-- When a heal ends needing you, the worker can run a hand-off command of your own, set as `heal.handOff.command`, in the agent's checkout, with `{session}`, `{directory}`, `{name}` and `{title}` filled in.
-- A heal's session is now shared with the server when it ends needing you, so every worker with `attention.resume` shows a **Resume in Herdr** button on the run page. A worker that doesn't have the session imports it into its own checkout first.
-
-## Dashboard
-
-- Every session shown, from heals and skill changes, has an **Open here** link (`upkeep://open/<session>`) that opens it on the machine the browser is on.
-
-## CLI
-
-- `upkeep open <session>`, also run from `upkeep://open/...` links, opens a session through this machine's `attention.resume`. If the session ran elsewhere, it imports it from the server first.
-- The `upkeep-git` package registers `upkeep-open.desktop` as the `x-scheme-handler/upkeep` handler.
+- New machine jobs keep each worker's own machine current without running `dot up`. Each one runs a single `dot up <stage> --json` stage headless on every worker that asked for work in the last half hour:
+  - `up-dotfiles` (hourly) pulls the dotfiles, rebuilds `dot` and stows them.
+  - `up-skills` (hourly, ten minutes after `skill-updates`) moves the shared skills to the latest main and relinks them.
+  - `up-repos` (every 30 minutes) pulls the tracked repositories that are behind and have no work in progress.
+  - `up-tools` (daily at 05:10) installs and upgrades mise tools.
+  - `up-plugins` (daily at 05:20) updates the agent plugins.
+- When a stage changes skills or plugins, the job then runs `dot up agents` to reload running agents.
+- A failed stage fails its run, which is never healed. A worker without `dot` skips the run.
 
 ## Server
 
-- `GET /api/sessions/:id` returns a shared session, and workers can share one with `PUT /api/work/runs/:id/session`. Shared sessions are pruned along with their runs.
+- Machine jobs are queued per worker. Once a minute, the server queues a run for each live worker whose latest run of a job is older than that job's last scheduled time, so a worker that was off catches up when it comes back. A manual run queues on every live worker.
 
-## Jobs
+## Dashboard
 
-- Landing clean skill imports regenerates the skills catalogue, so the marketplace doesn't keep stale pins.
-- Agent skill changes that only move pins in `skills.yml` and the generated marketplace land without review.
+- A new Machine lane in the Jobs table, whose last run column shows each worker's latest run of each machine job.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.22.0...0.23.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.23.0...0.24.0
