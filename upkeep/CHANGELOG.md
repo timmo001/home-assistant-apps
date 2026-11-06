@@ -1,20 +1,24 @@
-## Jobs
+## Heals
 
-- Heals no longer message the Plannotator Inbox. A heal that's parked or left unfinished is marked as needing you on the dashboard and shows on the Attention page instead. The `heal.inbox` and `heal.inboxProject` settings are gone; old configs still load.
-- Before reusing a clone, every job that keeps one removes empty Git lock files over an hour old from it and its submodules, so a Git command cut off once, such as by a restart, no longer fails every run after it.
-- A heal records the directory its agent worked in, alongside its session.
+- When a heal ends needing you, the worker can run a hand-off command of your own, set as `heal.handOff.command`, in the agent's checkout, with `{session}`, `{directory}`, `{name}` and `{title}` filled in.
+- A heal's session is now shared with the server when it ends needing you, so every worker with `attention.resume` shows a **Resume in Herdr** button on the run page. A worker that doesn't have the session imports it into its own checkout first.
 
 ## Dashboard
 
-- A heal's run page shows its agent's OpenCode session as the `opencode2 --session` command that resumes it, with a button to copy it and **Resume in Herdr**, which opens the session on the worker that ran it, in the agent's checkout.
-- Held skill changes show their agent's session the same way.
+- Every session shown, from heals and skill changes, has an **Open here** link (`upkeep://open/<session>`) that opens it on the machine the browser is on.
 
-## Workers
+## CLI
 
-- New `attention.resume` setting: the command a worker runs to open an agent's session, with `{session}`, `{directory}`, `{name}` and `{title}` filled in. Resume in Herdr needs it on the worker that ran the agent.
+- `upkeep open <session>`, also run from `upkeep://open/...` links, opens a session through this machine's `attention.resume`. If the session ran elsewhere, it imports it from the server first.
+- The `upkeep-git` package registers `upkeep-open.desktop` as the `x-scheme-handler/upkeep` handler.
 
 ## Server
 
-- A new `open-session` command, queued to the worker that ran the agent, and a migration adding the heal directory to runs.
+- `GET /api/sessions/:id` returns a shared session, and workers can share one with `PUT /api/work/runs/:id/session`. Shared sessions are pruned along with their runs.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.21.1...0.22.0
+## Jobs
+
+- Landing clean skill imports regenerates the skills catalogue, so the marketplace doesn't keep stale pins.
+- Agent skill changes that only move pins in `skills.yml` and the generated marketplace land without review.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.22.0...0.23.0
