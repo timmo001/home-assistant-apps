@@ -1,13 +1,9 @@
-## Server
-
-- Your own pull requests that are approved, or ready to merge, now sit in **Needs you** rather than **Waiting on others**. Ready to merge means its checks pass (or it has none), with no conflicts, no changes asked for, and no review asked of anyone else. In your own repositories, where nobody else reviews, a green pull request waits only on you to merge it. Status labels such as On Hold still keep it in your backlog, and failing checks still put it in Blocked.
-
 ## Jobs
 
-- The attention job marks your own pull requests **ready to merge** when they can go in, for the server to sort.
+- A new `sync` job keeps the copies apps take from groundwork current. Every hour it finds the repositories with a `sync.json` and runs groundwork's own sync over them. An app's edits to a QML copy go back into groundwork, then groundwork's changes are copied out. Each changed repository is checked, pushed to its default branch and its CI watched. A copy edited in both places fails its app, so a heal hands it to an agent. Repositories already tracked need opting into it with `upkeep repos add <repo> --job sync` alongside their other jobs. Set `UPKEEP_SYNC_DRY_RUN=true` on a worker to log what would change without changing anything.
 
-## Dashboard
+## Internals
 
-- A **ready to merge** chip shows on those pull requests, and the Needs you description says so.
+- Updated docs-kit, groundwork-tokens and groundwork-ui to 0.9.40.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.17.0...0.17.1
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.17.1...0.18.0
