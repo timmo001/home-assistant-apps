@@ -1,14 +1,10 @@
 ## Jobs
 
-- When the `sync` job finds every copy current, its summary now says "Every copy in 7 apps is current" instead of "Synced none with groundwork, none need attention".
-- When a later push to the same branch cancels a commit's CI, `bump`, `sync` and the other jobs that push now watch the newer commit's CI instead of failing.
+- New `skill-consumers` job, hourly: syncs the shared skills into the repositories listed in the skills repository's `consumers.yml`, through the `skill-maintenance` it builds from a fresh clone of the skills repository. It replaces the `skill-consumers` timer that ran on each machine.
+- New `skill-updates` job, hourly: runs `skill-maintenance updates-agent device` with the config named in a worker's `skills.updatesAgent` setting, so an agent works through the latest completed skill updates workflow run. A run already processed or deferred ends as skipped, and a worker without the setting skips it. It replaces the `skill-updates-agent` timer.
 
-## Dashboard
+## Docs
 
-- Updated groundwork-tokens and groundwork-ui to 0.10.1.
+- A Skills section in Running covers both jobs and the new worker setting.
 
-## Internals
-
-- Updated docs-kit to 0.10.1 and the shared skills.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.18.0...0.18.1
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.18.1...0.19.0
