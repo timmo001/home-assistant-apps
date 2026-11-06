@@ -3,7 +3,7 @@
 # scripts/check-apps.ts allows may differ; everything else must match ../opencode/config.yaml.
 name: OpenCode (manager access)
 # Set to the release version at release time, with ../opencode/config.yaml.
-version: 0.5.2
+version: 0.5.3
 slug: opencode_manager
 description: >-
   OpenCode with the Supervisor's manager role, so the agent can read every log and manage
@@ -26,6 +26,9 @@ ports_description:
   22/tcp: SSH, for your own terminal and Herdr
   49374/tcp: OpenCode on your network (web UI and API)
 watchdog: tcp://[HOST]:[PORT:49374]
+# Debian's sshd writes each login to the kernel audit log and drops the session when it can't.
+privileged:
+  - AUDIT_WRITE
 # Reaches Home Assistant's MCP server through the Supervisor.
 homeassistant_api: true
 # Every Supervisor log for ha-bridge, and control of apps, the host and backups.
