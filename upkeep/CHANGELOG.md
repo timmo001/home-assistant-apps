@@ -1,15 +1,14 @@
+## Server
+
+- **A missed schedule catches up on start.** A job whose scheduled time passed while the server was down, such as during an upgrade, now runs once as the server starts, rather than waiting for its next time. The server logs "Catching up …" for each one. Only jobs with an earlier scheduled run are caught up, so a fresh install doesn't start everything at once.
+
+## Dashboard
+
+- **Your own commits start read.** A new inbox entry of your own commits starts read, and stays read as more of yours join it. It's still in the inbox as history, but isn't counted as new or summed up as unread. Anyone else's change joining an entry still marks it unread.
+
 ## Jobs
 
-- **One heal for a failure across several consumers.** When a bump, or any job over repositories, fails in several consumers, the server now queues one heal over all of them instead of one per consumer. The fix agent checks them out side by side and gets `sessionMinutes` for each repository, up to four times. It finds the cause once, then runs each repository's checks and pushes each on its own. Its commits show in the inbox as one "Upkeep fixed …" entry. Heals per day still count per repository, and a repository past its limit is still held on its own.
-- **New `change` job.** Ask for one change across several repositories with `upkeep change owner/a owner/b --prompt "…"`, or the `change` command at `POST /api/attention/commands`. The last of the worker's `heal.agents` makes it in one headless session over checkouts side by side, checking and pushing each repository on its own and never opening a pull request. Its commits show in the inbox as one entry named for your prompt. A failed change is never healed.
+- **gh failures say what happened.** A gh command that printed nothing now reads as "gh: exited with 1, printing nothing", or "gh: was stopped by signal 15 (exit 143), printing nothing", and a timeout as "gh: timed out after 2m", in run errors, heals and logs. Any other error with an empty message shows its name instead of a blank.
+- **Heals ride out a GitHub outage.** A heal's agent that can't start because gh printed nothing now waits and starts again after a minute, then two, then four, as it already did for rate limits. If it still can't and the run failed on gh too, the job is queued again instead of left for you.
 
-## CLI
-
-- New `upkeep change <repo...> --prompt`.
-
-## Internals
-
-- The worker protocol is now 2, because heals carry a new multi-repository target. Workers on 0.28.0 or older are refused with `WorkerOutdated` until `upkeep-git` is updated.
-- The heal fix's checkout and session code is now shared as `across()` in the worker, used by both heals and changes.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.28.0...0.29.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.29.0...0.30.0
