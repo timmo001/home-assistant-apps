@@ -1,6 +1,6 @@
 ---
 name: Upkeep
-version: 0.24.0
+version: 0.25.0
 slug: upkeep
 description: Keep your repositories and their consumers up to date
 url: https://github.com/timmo001/upkeep
@@ -35,3 +35,6 @@ schema:
   triage_url: url?
   triage_host_token: password?
   triage_admin_token: password?
+  events_account_id: str?
+  events_queue_id: str?
+  events_token: password?
