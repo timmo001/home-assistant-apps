@@ -1,23 +1,19 @@
 ## Dashboard
 
-- Pages stay quick however much they hold. Every folding panel draws its contents the first time it opens, behind a skeleton, so the page opens at once and a closed panel costs nothing.
-- The inbox and each repository's page list entries under days that fold, and only the entries on screen are drawn. Which days you fold is kept in this browser, per page.
-- Lists inside panels are tables you can sort and search: an entry's changes, Attention's What moved, Gone and Latest releases, a skill's commits and a run's commits. Each scrolls inside its own frame.
-- A skill's commits show properly again, rather than spread over several lines.
-- Agent summaries, on the inbox and on a run, and what an agent said on a skill change, read as markdown. A skill change's diff is shown with its added and removed lines tinted.
-- A run's log scrolls inside its own frame and only draws the lines on screen, so a long log no longer slows the page.
-- Which Attention panels are open is kept per panel, in this browser, and so is whether Since you last looked shows its full list. Groups you'd folded before carry over.
-- Tables and panels keep their state with Groundwork's shared storage.
-- A page no longer redraws when a refresh brings back the same data, so open panels and scroll positions stay put while it polls.
-- Jobs nothing starts by itself, such as Summary, show On request instead of an empty schedule, and no longer offer Pause, since pausing only stops scheduled and release runs. One already paused can still be resumed. (#60)
+- The app bar's theme picker offers every Groundwork theme: Glazing, still the default, then Base, Survey, Slate, Bridge and Snag, then Catppuccin, Tokyo Night and GitHub. Every theme is set in Mona Sans and Geist Mono. (timmo001/upkeep#21)
+- When a worker runs on a machine with Omarchy, the picker also offers the desktop's theme under Desktop, as "Omarchy (theme name)". While it's picked, the dashboard follows each theme switch on the desktop. It's never the default. (timmo001/upkeep#22)
+- Icons are now Phosphor instead of Material Design Icons. Most buttons, menus, tabs, filters and options show one beside their text: the Focus menu and its choices, the Work, Personal and All scopes, the inbox kinds, Save, Resume, Ask, Start again, Sign in and the rest. (timmo001/upkeep#21)
 
-## Jobs
+## Server
 
-- The deps job does Renovate's lock file maintenance. (#77)
-- A worker retries reporting a run's end for about a minute when the server restarts mid-report, so the run doesn't stay running until it's lost.
+- The server keeps the latest Omarchy theme a worker sends and serves it at `GET /api/theme`. A new `theme` topic in `/api/status/changes` tells the dashboard when it changes.
 
-## Internals
+## Workers
 
-- Groundwork 0.10.5.
+- A worker on an Omarchy machine sends the desktop's theme to `PUT /api/work/theme` when it starts and each time Omarchy switches it. If a send fails, it tries again every 30 seconds. A worker without Omarchy sends nothing. This needs the `upkeep-git` package built from this release or later.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.30.0...0.31.0
+## Docs
+
+- The docs site's header has the same theme picker, also in Mona Sans. Running gains a Theme section.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.31.0...0.32.0
