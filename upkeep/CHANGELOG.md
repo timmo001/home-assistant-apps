@@ -1,13 +1,17 @@
 ## Jobs
 
-- Jobs that work across repositories, such as bumps, syncs, drift, skills, deps, watch and stalled updates, can make their own GitHub calls as a GitHub App, so they count against the App's rate limit rather than your login's. Set **github_app_id** and **github_app_key** on the app, and **github_app_account** only when the App is installed on more than one account. Heals and agents keep the worker's login, and without the options every job does as before. See [Jobs as the App](https://upkeep.timmo.dev/events#jobs-as-the-app) (#55).
+- A heal's "needs you" card now clears by itself once a later run of the same job gets through. For a consumer, the later run has to cover that repository without it failing; a run limited to another repository doesn't count. For Upkeep itself, the later run has to succeed. Bump heals only clear on a run for the same released repository, and a card shared by several heals goes once none of them still needs you. A fix made outside Upkeep no longer leaves a card to dismiss by hand.
+- `ci` runs on the machine's login again, since it reads notifications, which a GitHub App can't.
+- `deps` lists repositories through the GitHub App's installation when it runs as the App.
+- Bump cleans submodules removed upstream out of checkouts it reuses.
 
-## CLI
+## Dashboard
 
-- `upkeep inbox list` and `upkeep inbox move <entry> bumps|worth|upkeep`, with matching MCP tools, to read the inbox and move entries between Worth reading and Version bumps (#59).
+- The mode and theme controls sit beside Sign out at the end of the bar.
+- Sign out is an icon button, and asks before signing you out.
 
 ## Internals
 
-- Update the desktop worker only after the server is on 0.35.0.
+- AGENTS.md and the docs point at the open issues now that timmo001/upkeep#1 is closed.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.34.0...0.35.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.35.0...0.36.0
