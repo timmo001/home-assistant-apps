@@ -1,16 +1,13 @@
-## Inbox
+## Jobs
 
-- Move an inbox entry between Worth reading and Version bumps from its Move menu; the move holds for later versions of the same update or drift. You can also set a rule for a repository, from the same menu, `upkeep inbox rule <repo> bumps|worth|upkeep` or the `inbox_rule` tool (#59).
+- Jobs that work across repositories, such as bumps, syncs, drift, skills, deps, watch and stalled updates, can make their own GitHub calls as a GitHub App, so they count against the App's rate limit rather than your login's. Set **github_app_id** and **github_app_key** on the app, and **github_app_account** only when the App is installed on more than one account. Heals and agents keep the worker's login, and without the options every job does as before. See [Jobs as the App](https://upkeep.timmo.dev/events#jobs-as-the-app) (#55).
 
-## Dashboard
+## CLI
 
-- Tables and lists scroll smoothly. Before, every row was taken off the page and put back whenever a new one scrolled into view, which cost up to 77ms a frame and showed blank space until the rows drew in.
-- A table in its own frame, such as Jobs, keeps its place when new data arrives, rather than jumping back to the top.
+- `upkeep inbox list` and `upkeep inbox move <entry> bumps|worth|upkeep`, with matching MCP tools, to read the inbox and move entries between Worth reading and Version bumps (#59).
 
 ## Internals
 
-- Groundwork 0.10.8, which puts Groundwork's CSS in cascade layers.
-- Database migration 0031_inbox_moves.
-- Update the desktop worker only after the server is on 0.34.0, since the new worker expects the inbox's placedBy.
+- Update the desktop worker only after the server is on 0.35.0.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.33.0...0.34.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.34.0...0.35.0
