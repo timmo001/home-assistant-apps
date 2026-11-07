@@ -1,16 +1,17 @@
 ## Server
 
-- **One status.** New `GET /api/status`: Upkeep's health (`ok`, `warning` while anything needs you, `degraded` while no worker is live), what needs you with the dashboard page for each (a heal that asked, a parked job, a skill change waiting), the parked jobs and the live workers (#89).
-- **Workers older than the server get no runs.** Each claim now carries the worker's protocol, and the server refuses an older worker before handing it a run, instead of leaving the run stranded until the lost-run sweep. Update workers (`upkeep-git`) before installing this release (#88).
+- **Workers can read the status.** New `GET /api/work/status` gives a worker the same status as `/api/status`, so it can tell you when something new needs you (#89).
+
+## Jobs
+
+- **Notifications for what needs you.** A worker with `notify` in its config runs `notify.command` once for each new item that needs you, such as a heal that asked, a parked job or a skill change waiting, with `{title}` and `{url}` filled in. It reads the status once a minute. The first read after a start only records what's there, so restarts don't repeat old notifications, and nothing is sent for green runs (#89).
 
 ## CLI
 
-- `upkeep status` shows the new status. `--json` adds the bar and footer lines, and `--bar-json` prints just the bar's `{text, tooltip, class}`, for a status bar.
-- The job list moved to `upkeep jobs`.
-- The `status` MCP and Code Mode tool returns the new status, and a new `jobs` tool lists the jobs.
+- `upkeep status --bar-json` puts a wrench before the count, so the bar says what it's for.
 
-## Docs
+## Agents
 
-- A Status section on the Running page, which jobs GitHub events also start, and how workers that are older than the server are handled.
+- The OpenCode plugin has a TUI part that shows the count of what needs you in the prompt footer, and lists each item when clicked.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.25.0...0.26.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.26.0...0.26.1
