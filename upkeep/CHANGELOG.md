@@ -1,28 +1,15 @@
-## Server
-
-- Workers are told about new work as it's queued. A worker's request for work is held for up to 30 seconds and answered as soon as a run is queued for it, so a queued run starts straight away instead of on the next poll.
-- Cancelling a running run stops it within moments. A worker's heartbeat is held until the next one is due and ends early when its run is cancelled.
-- New `GET /api/status/changes` stream (server-sent events) says what changed as it happens: runs, logs, the inbox, attention, skills and workers.
-
-## Dashboard
-
-- Pages update live from the server's change stream, fetching again only what changed, and a running run's log follows as it's written. While the stream is connected, pages fall back to polling once a minute.
-- A dropped stream is retried every 5 seconds, with a small "reconnecting" marker next to the version, and everything is fetched again once it's back.
-
 ## Jobs
 
-- Bump starts each consumer as soon as it can and watches CI outside the four working slots, so a slow CI run no longer holds up the next consumer.
-- Drift-review heals go straight to the hard-fix agent, skipping the decision model.
-- A stalled-update heal can now close an update that another dependency's exact pin blocks, with a comment naming the pin, instead of failing.
-- The dotfiles pull runs `dot up herdr` after `dot up stow`, and the Agent plugins job's description now names the plugins it updates.
+- **One heal for a failure across several consumers.** When a bump, or any job over repositories, fails in several consumers, the server now queues one heal over all of them instead of one per consumer. The fix agent checks them out side by side and gets `sessionMinutes` for each repository, up to four times. It finds the cause once, then runs each repository's checks and pushes each on its own. Its commits show in the inbox as one "Upkeep fixed …" entry. Heals per day still count per repository, and a repository past its limit is still held on its own.
+- **New `change` job.** Ask for one change across several repositories with `upkeep change owner/a owner/b --prompt "…"`, or the `change` command at `POST /api/attention/commands`. The last of the worker's `heal.agents` makes it in one headless session over checkouts side by side, checking and pushing each repository on its own and never opening a pull request. Its commits show in the inbox as one entry named for your prompt. A failed change is never healed.
 
 ## CLI
 
-- `upkeep cancel` and the MCP `cancel` tool say the worker stops a cancelled run shortly, not at its next heartbeat.
+- New `upkeep change <repo...> --prompt`.
 
 ## Internals
 
-- No worker protocol bump: the new wait fields are optional, and older workers and servers fall back to their usual intervals.
-- Updated @timmo001/docs-kit, @timmo001/groundwork-tokens and @timmo001/groundwork-ui to 0.10.2, and @timmo001/effect-gh to 0.12.0.
+- The worker protocol is now 2, because heals carry a new multi-repository target. Workers on 0.28.0 or older are refused with `WorkerOutdated` until `upkeep-git` is updated.
+- The heal fix's checkout and session code is now shared as `across()` in the worker, used by both heals and changes.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.27.0...0.28.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.28.0...0.29.0
