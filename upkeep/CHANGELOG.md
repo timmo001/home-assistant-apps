@@ -1,10 +1,14 @@
 ## Jobs
 
-- A run handed off to an agent, such as a `drift-review`, now gets a heal for each of its repositories instead of one heal over them all, so each repository is reviewed in its own agent session.
-- Drift reviews are told to keep existing behaviour working while they add what a tool supports.
+- A worker can rest in quiet hours set in its settings (`quietHours` with `start` and `end`, such as 00:00 to 07:00). It takes no new scheduled runs then, its status reads "Quiet hours", and notifications wait until they end. Commands from the dashboard still run, and the server keeps counting it as live.
+- A heal handed off to you now leads with the work it did, shows what its repository was handed and logs it, and its reason names the releases involved.
 
-## Worker
+## Dashboard
 
-- A worker runs up to `heal.sessions` heals at once, 3 by default, so the heals of a drift review are worked on side by side. Two heals never work on the same repository's checkout at the same time: one waits for the other.
+- A heal that left something for you has **Ask me in the Inbox** beside its session. It resumes the session in the background on the worker that ran it, telling the agent to load the `plannotator` skill and ask you what it needs in the Plannotator Inbox (timmo001/upkeep#93).
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.38.0...0.39.0
+## Internals
+
+- The worker protocol is now 4, for the new `ask-inbox` command. Workers on an older `upkeep-git` are given no runs until they update.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.39.0...0.40.0
