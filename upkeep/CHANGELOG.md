@@ -1,5 +1,9 @@
 ## Dashboard
 
-- The Releases page says "repositories" rather than "repositorys" when more than one has changes worth a release.
+- A skill change's diff on the Skills page shows on first load, rather than staying empty until the change next updated. Its Wrap, Find and Copy buttons are a size up.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.45.4...0.45.5
+## Internals
+
+- Updated groundwork to 0.18.0.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.45.5...0.45.6
