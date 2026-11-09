@@ -1,14 +1,11 @@
 ## Jobs
 
-- Unreleased, CI and Drift review run in a new **checks** lane, apart from the jobs that push to repositories, so the Releases page and CI checks no longer wait behind a long dependency or bump run.
-
-## Server
-
-- A run you start by hand is now taken before scheduled and event runs in its lane.
-- Queuing a run for every repository takes over the runs of the same job still waiting for single repositories, in the oldest one's place, rather than running them and then checking every repository again. A manual run among them keeps it manual.
+- Change and Skill change run in a new **agent** lane, apart from heals and from the jobs that push to repositories. A run there frees the lane as soon as its agent is going, so the next one starts straight away, while the rest of the run (waiting for the agent and recording its commits or patch) carries on beside the lane on the same worker.
+- Asking an agent to ask you in the Inbox frees the command lane the same way, rather than holding it for up to 10 minutes.
+- Heals keep their lane until they end, so the heal sessions setting still caps how many run at once.
 
 ## Dashboard
 
-- The Jobs page groups the new checks lane, and a queued run's place in its lane counts manual runs first.
+- The Jobs page groups the new agent lane.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.47.1...0.48.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.48.0...0.49.0
