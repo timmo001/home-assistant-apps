@@ -1,6 +1,5 @@
 ## Dashboard
 
-- Releases: pressing a repository in the list opens that repository, rather than always the last one. The same fix applies to the Unreleased changes section on the Attention page.
-- Releases: a change's Why wraps and shares the spare width with the change, so its reason reads in full instead of being cut to a letter.
+- Releases: a change's Why takes the table's spare width, so its reason reads across the row instead of down a narrow column.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.45.0...0.45.1
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.45.1...0.45.2
