@@ -1,20 +1,9 @@
-## Jobs
+## Server
 
-- When you press **Ask me in the Inbox** on a heal that needs you, the agent is now told the run's ID. Once the work is done and nothing waits on you, it dismisses the run itself, so it stops showing as needing you.
-- `deps` updates Docker images: it reads image references in Dockerfiles, Compose files and workflows, looks up tags, digests and dates from their registries, and plans updates with Renovate's `docker` versioning and `versionCompatibility`.
-- `deps` only notes Renovate config that could change a repository's updates.
+- An OpenCode agent left waiting on a permission prompt now shows under **Needs you** on the dashboard and in `upkeep status`, with the session's title, its directory, the worker and what it wants to do. It counts towards the warning state and the notification for new items, and settles by itself once the prompt is answered. Dismissing one keeps it dismissed while that prompt waits.
 
-## Dashboard
+## Workers
 
-- Updated to Groundwork 0.14.0 (`@timmo001/groundwork-tokens`, `@timmo001/groundwork-ui`).
+- Each worker watches its own machine's OpenCode, every session, Upkeep's or yours, for permission prompts, reading the background service from `$XDG_STATE_HOME/opencode/service.json`. A prompt is reported once it's waited a minute, so one answered straight away never shows. A machine without OpenCode running reports nothing. This reaches workers with the next `upkeep-git` package.
 
-## Docs
-
-- Documented Docker image updates, `deps` notes, nested overrides and name templates, and how the Inbox-asked agent dismisses the run.
-- Updated to `@timmo001/docs-kit` 0.14.0.
-
-## Internals
-
-- Updated the shared `timmo001/workflows` to 20261108.2.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.42.0...0.43.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.43.0...0.44.0
