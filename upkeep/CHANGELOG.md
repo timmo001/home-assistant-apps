@@ -1,15 +1,20 @@
 ## Jobs
 
-- Heals read the last five heals of the same job and target: when each ran, what was chosen, how it ended, what it pushed and what it said. Both the decision model and the agent see them next to triage's notes, so a fix that didn't hold isn't tried again blind, and heals without triage now have a memory of their own (timmo001/upkeep#29).
-- Dependency updates whose release notes the regression rules can't settle go to the decision model, as bumps already did, under the same `regression.threshold` and `regression.decisionsPerDay` cap. Each update is asked about once per run, so repositories moving a dependency between the same versions share one answer (timmo001/upkeep#90).
-- The deps job reads locked versions of npm dependencies from `bun.lock`, `pnpm-lock.yaml`, `package-lock.json` and `yarn.lock`, and plans in-range lockfile updates as Renovate's `update-lockfile` and `in-range-only` strategies do. They're applied with the package manager's own update command, and under `auto` they land as their own `-lockfile` groups, including in Bun repositories, where Renovate makes none (timmo001/upkeep#77).
+- When you press **Ask me in the Inbox** on a heal that needs you, the agent is now told the run's ID. Once the work is done and nothing waits on you, it dismisses the run itself, so it stops showing as needing you.
+- `deps` updates Docker images: it reads image references in Dockerfiles, Compose files and workflows, looks up tags, digests and dates from their registries, and plans updates with Renovate's `docker` versioning and `versionCompatibility`.
+- `deps` only notes Renovate config that could change a repository's updates.
 
-## Server
+## Dashboard
 
-- A heal's `healing` response carries its earlier heals. Workers on older servers read none.
+- Updated to Groundwork 0.14.0 (`@timmo001/groundwork-tokens`, `@timmo001/groundwork-ui`).
+
+## Docs
+
+- Documented Docker image updates, `deps` notes, nested overrides and name templates, and how the Inbox-asked agent dismisses the run.
+- Updated to `@timmo001/docs-kit` 0.14.0.
 
 ## Internals
 
-- `@timmo001/effect-gh` is updated to 0.13.2.
+- Updated the shared `timmo001/workflows` to 20261108.2.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.41.0...0.42.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.42.0...0.43.0
