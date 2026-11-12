@@ -1,10 +1,9 @@
-## Dashboard
+## Server
 
-- The runs date filter now uses groundwork's date picker: a calendar to pick any day up to today, with Yesterday and Today shortcuts under it. The chip beside the search still takes the filter off.
+- The server now stops within 3 seconds of being asked to, instead of waiting up to 20 for workers' held claims. The Supervisor gives an app 10 seconds before killing it, so every cold backup and restart was ending in "exited with non-zero exit code 137". Workers whose claim is cut short ask again on their next poll.
 
-## Internals
+## Jobs
 
-- Groundwork tokens, UI and docs-kit updated to 0.24.0.
-- Effect, @effect/tsgo, OpenTUI, solid-js, wrangler, Astro, cronstrue and minimatch updated.
+- Worktrees for two repositories whose checkouts share a folder name, such as `~/repos/notes` and `~/Documents/notes`, no longer share a run's worktree. Before, a run that updated both could commit one repository's updates to the other. The worker fix ships in `upkeep-git`.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.56.0...0.57.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.57.0...0.57.1
