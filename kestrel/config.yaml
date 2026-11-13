@@ -2,7 +2,7 @@
 name: Kestrel
 # The one version Kestrel's server and clients share, as in
 # packages/core/src/Version.ts; CI checks they match
-version: 0.5.0
+version: 0.5.1
 slug: kestrel
 description: Your cameras, recordings and events in one place
 url: https://github.com/timmo001/kestrel
@@ -29,5 +29,10 @@ map:
     read_only: false
 environment:
   KESTREL_INGRESS_PORT: "8099"
+  KESTREL_APP_OPTIONS: /data/options.json
   KESTREL_RECORDINGS: /media/kestrel
   KESTREL_NAME: Home Assistant
+options:
+  hide_sidebar: true
+schema:
+  hide_sidebar: bool
