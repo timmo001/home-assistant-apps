@@ -14,3 +14,6 @@ apps:
   upkeep:
     repository: timmo001/upkeep
     path: home-assistant/app
+  kestrel:
+    repository: timmo001/kestrel
+    path: home-assistant/app
