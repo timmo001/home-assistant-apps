@@ -2,7 +2,7 @@
 name: Kestrel
 # The one version Kestrel's server and clients share. It stays 0.0.0 here:
 # timmo001/home-assistant-apps sets the release's tag when it copies the app
-version: 0.5.24
+version: 0.5.25
 slug: kestrel
 description: Your cameras, recordings and events in one place
 url: https://github.com/timmo001/kestrel
