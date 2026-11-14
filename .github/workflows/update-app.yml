@@ -63,8 +63,9 @@ jobs:
         run: git clone --quiet --depth 1 --branch "$TAG" "https://github.com/$REPOSITORY.git" "$SOURCE"
 
       # The Supervisor offers the version in config.yaml and pulls that image
-      # tag, so only copy a stable release whose image exists.
-      - name: Check the release, versions and images
+      # tag, so only copy a stable release whose image exists. The tag is the
+      # version, which the copy sets, so an app needn't bump it in its code.
+      - name: Check the release and images
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -73,27 +74,24 @@ jobs:
             echo "::error title=Prerelease::$TAG is a prerelease."
             exit 1
           fi
+          version="${TAG#v}"
           names=()
           for folder in $FOLDERS; do
             path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
             config="$SOURCE/$path/config.yaml"
-            version="$(yq -r '.version' "$config")"
-            if [ "$version" != "${TAG#v}" ]; then
-              echo "::error title=Version mismatch::$path/config.yaml has $version, the tag is $TAG."
-              exit 1
-            fi
             image="$(yq -r '.image' "$config")"
             docker buildx imagetools inspect "$image:$version" > /dev/null
             names+=("$(yq -r '.name' "$config")")
           done
           name="$(printf '%s and ' "${names[@]}")"
-          printf 'NAME=%s\nVERSION=%s\n' "${name% and }" "${TAG#v}" >> "$GITHUB_ENV"
+          printf 'NAME=%s\nVERSION=%s\n' "${name% and }" "$version" >> "$GITHUB_ENV"
 
       # CHANGELOG.md at the tag still holds the previous release's notes, so
       # take this release's notes instead. -L copies what links point to, as an
       # app folder can link to files in another. --checksum compares contents,
       # as both checkouts can share a modified time and a new version is often
-      # the same size.
+      # the same size. The version line is replaced rather than rewritten with
+      # yq, which would reformat the rest of config.yaml.
       - name: Copy the apps
         env:
           GH_TOKEN: ${{ github.token }}
@@ -104,6 +102,11 @@ jobs:
             path="$(FOLDER="$folder" yq -r '.apps[strenv(FOLDER)].path' apps.yml)"
             mkdir -p "$folder"
             rsync -aL --checksum --delete --exclude CHANGELOG.md "$SOURCE/$path/" "$folder/"
+            sed -i "s/^version: .*/version: $VERSION/" "$folder/config.yaml"
+            if [ "$(yq -r '.version' "$folder/config.yaml")" != "$VERSION" ]; then
+              echo "::error title=Version::Couldn't set $folder/config.yaml's version to $VERSION."
+              exit 1
+            fi
             printf '%s\n' "$(printf '%s' "$notes" | tr -d '\r')" > "$folder/CHANGELOG.md"
           done
 
