@@ -1,8 +1,10 @@
 ---
 extends: default
 
-# App folders are copied from each app's own repository, which lints them.
+# App folders are copied from each app's own repository, which lints them, and
+# .mise holds the locks mise generates.
 ignore: |
+  .mise/
   triage/
   opencode/
 
