@@ -1,12 +1,24 @@
+## Jobs
+
+- `releases`, `unreleased` and `skill-updates` now run as the GitHub App rather than the machine's login, so they spend the App's rate limits and leave yours alone. They fall back to the login while the App's limits are low.
+- `unreleased` reads default branches and latest releases through GraphQL in batches of 50, falling back to REST while GraphQL is the low limit.
+- When a heal or change agent stops while part of GitHub it needs is down, the worker adds an OpenCode schedule to its session that checks GitHub every 5 minutes and wakes the session to carry on once it's back, for up to 2 hours.
+- Heal and change agents are told they can schedule their own wake-up with `/schedule` when they have to wait for something slow, such as CI or an upstream release.
+
 ## Dashboard
 
-- The runs lists have presets beside Filters: Default, Everything, Failures, Waiting on you and Running. Each one sets the State filter in one press and leaves your other filters alone.
-- Still open leaves out failed commands. You watched them fail and nothing runs the same command again, so they keep their Failed state without staying open.
-- Updated Groundwork to 0.46.0.
+- The Default, Failures and Waiting on you presets leave out heal runs whose failure has since been settled. Everything still shows them.
 
 ## Server
 
-- A failed skill change now settles when a later review of the same skills in the same repository passes, whatever started it, or when a change to them lands. Before, it needed the exact same command, reason included, so most never settled.
-- On upgrade, the skill-change failures that later reviews already covered are settled.
+- A heal run now carries what settled the failure it healed, filled in for existing runs when the app updates.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.60.2...0.60.3
+## CLI
+
+- `upkeep github check <part>...` checks parts of GitHub with the same small read a run uses, failing when one doesn't answer.
+
+## Internals
+
+- Updated @timmo001/oxlint-rules to 0.6.4.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.60.3...0.60.4
