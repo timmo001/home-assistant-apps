@@ -1,5 +1,12 @@
 ## Dashboard
 
-- The runs lists, of every job and of one job, now show only the runs that are queued, running or failed and not yet settled by default: failed, being healed, retrying, with an agent, fix pushed, needs you, parked and GitHub down. Succeeded, skipped, healed, recovered, retried, nothing to fix, handed off and cancelled runs are still there to pick in the State filter.
+- The runs lists have presets beside Filters: Default, Everything, Failures, Waiting on you and Running. Each one sets the State filter in one press and leaves your other filters alone.
+- Still open leaves out failed commands. You watched them fail and nothing runs the same command again, so they keep their Failed state without staying open.
+- Updated Groundwork to 0.46.0.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.60.1...0.60.2
+## Server
+
+- A failed skill change now settles when a later review of the same skills in the same repository passes, whatever started it, or when a change to them lands. Before, it needed the exact same command, reason included, so most never settled.
+- On upgrade, the skill-change failures that later reviews already covered are settled.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.60.2...0.60.3
