@@ -1,17 +1,13 @@
-## Jobs
-
-- Runs now ride out GitHub outages. When a run fails, the worker checks the parts of GitHub its job uses (Git, the REST and GraphQL APIs, Issues, Pull requests and Actions) with one small read each, as the run's own login. If one isn't answering, the run waits for it, checking every 2 minutes, and runs again once it's back, without using a heal. Nothing is checked before a step, so pushes are never held up.
-- A run that's still waiting after 2 hours ends as the new **GitHub down** state rather than failed. It never gets a heal, the server runs it again 30 minutes later, and you can run it again from its page. A later run passing settles it like a failure.
-- While a run finds the REST API down, the worker takes no new scheduled runs until it answers again. What the dashboard asks for still runs, and the worker's status reads `waiting on GitHub` with the parts it's waiting on.
-- A heal whose agent can't start because GitHub's API is down waits up to 2 hours for it, and starts as soon as it's back, before queueing the job again.
-- The run log says what GitHub's status page reports for the part that's down, as a hint only.
-
 ## Dashboard
 
-- Runs that ended as GitHub down show with their own badge, and count as open failures.
+- The runs table's filters now live in the page's address, such as `?state=failed,needs-you&job=deps&day=2026-11-15`, so a link or bookmark keeps them and the back button brings them back. The table's own view state, such as its sort, is still kept as before.
+- Every filter offers each value it can take, not only those the runs on screen have: every run state, every job and every trigger, with a count of 0 for those with no runs.
+- Still open is now in the Filters sheet as a switch, counted with the other filters and shown as a chip that takes it off, rather than a button of its own.
 
-## Internals
+## Jobs
 
-- The worker protocol is now 6, since runs can carry the new state. Update workers along with the server.
+- A failed run's error says what went wrong instead of a stack trace into the bundled binary. Each expected error is one entry with its tag and message, and what caused it, such as the executable a spawn couldn't find. A defect still shows its full stack.
+- A run that failed in some of its repositories (bump, deps, drift, CI, sync and stalled updates) names why each one failed in its error, as the job logged it, rather than only listing them. A deps run that failed on a check now shows the check's own output.
+- A machine job's stage that exits without a result names the last line `dot` printed, instead of only its exit code.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.59.3...0.60.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.60.0...0.60.1
