@@ -1,0 +1,33 @@
+# The repository's pinned tools and tasks. Each app is a copy from its own
+# repository, so this only lints and formats what the repository itself holds;
+# the hk pre-push hook runs the shared lints.
+min_version = "2025.1.0"
+
+[tools]
+node = "26.13.1"
+"npm:prettier" = "3.10.1"
+hk = "2.12.0"
+# The linters the shared hk pre-push hook runs, matching CI.
+uv = "0.13.8"
+# yamllint's PyYAML has no wheels for newer Pythons, and mise won't build it from source.
+python = "3.14.10"
+"pipx:yamllint" = "1.38.0"
+"npm:markdownlint-cli2" = "0.24.1"
+actionlint = "1.7.12"
+shellcheck = "0.11.0"
+
+[tasks.format]
+description = "Format the repository's Markdown, JSON and YAML"
+run = "prettier --write ."
+
+[tasks."format:check"]
+description = "Check formatting without writing"
+run = "prettier --check ."
+
+[tasks.lint]
+description = "Run the shared hk lints over every file"
+run = "hk check --all"
+
+[tasks.check]
+description = "Verify formatting and run the shared lints"
+depends = ["format:check", "lint"]
