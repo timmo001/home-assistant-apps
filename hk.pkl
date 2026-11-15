@@ -1,0 +1,7 @@
+// Pre-push checks: the shared base from timmo001/workflows, plus its lints.
+// Run them by hand with `hk check --all`.
+amends "package://github.com/timmo001/workflows/releases/download/20261114.0/hk-base@20261114.0.0#/base.pkl"
+
+// App folders are copied from each app's own repository, which lints them, and
+// .mise holds the locks mise generates.
+exclude = List(".mise", "kestrel", "opencode", "opencode_manager", "triage", "upkeep")
