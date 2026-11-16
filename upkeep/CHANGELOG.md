@@ -1,11 +1,18 @@
-## Dashboard
-
-- The Jobs page shows how a job's latest batch is getting on under its last run, such as "Batch 10:21: 33 of 40 done, 1 didn't pass". `deps` runs as a batch of runs, one per repository, since 0.64.0 (timmo001/upkeep#103).
-- A job's page has a Latest batch note: when it was queued, how many of its runs are done, running, waiting or didn't pass, and when the last one ended.
-- On the Runs page, each run that's one of a batch says "in a batch" under its repository, linking to its job's page.
-
 ## Server
 
-- The jobs list sends each job that fans out with its latest batch's progress, and says it fans out.
+- Agent reviews from a run that handed work off now leave the Failures list once they're done. A heal that pushed a fix or found nothing to fix settles itself, as does one asking you once you've dismissed it. One that broke or is still asking is settled by a later heal of the same repository, where a drift review covers drift.
+- A failure retried by a run that handed off is settled once every heal of that handoff is done.
+- A retry that doesn't pass now sends back every failure it was retrying, not only the first, so none is left stuck at retrying.
+- A release job's run with no release, which could happen before that was refused, is cancelled along with its heals, since it never could have run.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.64.0...0.65.0
+## Dashboard
+
+- The Failures and default runs lists leave out commands that failed, as Still open already did. They were seen as they happened and are never healed.
+- A heal that settled itself no longer links to itself as what settled it.
+
+## Jobs
+
+- A run that couldn't reach a server, such as Upkeep's while it restarts for an upgrade, is queued again once, as a run the worker stopped is, rather than failing a heal that nothing then heals.
+- Dependencies shares its lookups across a worker's runs, and each run reads only its own repositories.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.65.0...0.66.0
