@@ -2,7 +2,7 @@
 name: Kestrel
 # The one version Kestrel's server and clients share. It stays 0.0.0 here:
 # timmo001/home-assistant-apps sets the release's tag when it copies the app
-version: 0.5.47
+version: 0.6.0
 slug: kestrel
 description: Your cameras, recordings and events in one place
 url: https://github.com/timmo001/kestrel
@@ -17,11 +17,18 @@ host_network: true
 # only answers the Supervisor.
 ingress: true
 ingress_port: 8099
+# Streams request bodies to the app, so a large backup uploads through Home
+# Assistant without the Supervisor holding it all in memory
+ingress_stream: true
 panel_icon: mdi:cctv
 panel_title: Kestrel
 watchdog: http://[HOST]:7380/api/health
 # Seconds to stop in, so each camera's recording finishes its file
 timeout: 30
+# Kestrel's own backups kept in the app's data are copies already, and can
+# hold every recording, so Home Assistant's backups of the app leave them out
+backup_exclude:
+  - state/backups/*
 # Recordings go in Home Assistant's media folder, so they show in its media
 # browser and stay out of the app's backups
 map:
