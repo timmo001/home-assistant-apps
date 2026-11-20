@@ -1,25 +1,20 @@
-## Jobs
+## Server
 
-- A worker's settings can now narrow the `up-*` jobs it runs. `machine.stages` lists the `dot up` stages it takes, and `machine.schedules` moves a stage to a cron of its own on that worker. A stage left out is never queued there, and its runs already queued there are dropped.
-- `machine.only` makes a maintenance-only worker: it takes only the machine jobs for its stages, for a server that should keep itself current without taking Upkeep's other work.
-- `machine.command` runs `dot` some other way, such as through `ssh`, so one worker can keep another machine current. The stow, Herdr and agents stages that follow a stage go through the same command.
-- `machine.selfUpdate` replaces `dot up first-party` for a worker the server refuses as too old, for one installed some other way, such as through mise. Once it succeeds the worker drains and restarts on the new binary, but only once it's been up 15 minutes, so an update that brings nothing newer doesn't restart it over and over.
-- The machine jobs only need `git`, so they still start while GitHub's REST API is down or the rate limit is at its reserve.
+- The server can back up its store and restore it. A backup is a copy of the whole store (runs and their logs, the inbox, attention, notes, repositories, and the admin and worker tokens), made while the server runs and kept in `backups` beside the store. Restoring one checks it's a sound Upkeep store and not from a newer Upkeep, then the server starts again on it in the same process, keeping the store it replaced as `server.db.before-restore`. Settings stay where they're set. (timmo001/upkeep#110)
+- Downloads go through one-time links that last five minutes, and uploads of any size are accepted.
 
 ## Dashboard
 
-- The worker list shows a maintenance-only worker as `Maintenance only`, with the stages it runs.
+- The Jobs page has a **Backups** section: make a backup, download, delete or restore one kept on the server, or restore a file from this device. After a restore the page waits for the server and loads again.
 
-## Server
+## CLI
 
-- The status says degraded while every live worker is maintenance-only, since nothing then runs the other jobs.
-- A failure that needed you stops needing you once a later run passes and settles it. Before, it stayed in Needs you even though it showed as healed or recovered.
-- A run that held a skill change for your approval stops needing you once the change lands or is dropped.
-- Those already stuck in Needs you are cleared when the server starts.
+- `upkeep backups` lists the backups kept on the server, and `upkeep backups make`, `get <name> -o <file>`, `remove <name>` and `restore <name-or-file>` do the rest.
+- `upkeep-git` now ships `upkeep-server.service`, a user unit for running the server outside Home Assistant, not enabled. It reads its settings from `~/.config/upkeep/server.env` and restarts on upgrade.
 
-## Internals
+## Home Assistant app
 
-- The app image is built with the shared container image workflow, and the docs site and events Worker deploy from Alchemy stacks.
-- Bun 1.4.5, Effect, Solid 2.0.3, OpenTUI, OpenCode 2, oxlint, wrangler, cronstrue, Astro and timmo001/workflows 20261116.1.
+- Home Assistant's backups of the app leave Upkeep's own kept backups out, as they're copies already.
+- Uploads stream through ingress, so restoring a large backup from the sidebar dashboard doesn't sit in the Supervisor's memory.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.68.0...0.69.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.69.0...0.70.0
