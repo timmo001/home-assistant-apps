@@ -1,20 +1,17 @@
+Machine jobs are named by the command they run, and three more keep servers current: containers, system packages and old files. Workers can now run from release binaries through mise.
+
+## Jobs
+
+- Three new machine jobs: `containers` (daily at 02:00) updates containers to their newest images and prunes old ones, `system` (02:15) upgrades system packages and removes what's no longer needed, and `clean` (02:50) removes old caches and logs. `system` and `clean` are opt-in: they only run on workers that list them in `machine.stages`. (timmo001/upkeep#109)
+- Machine jobs are named `dot up <stage>` on the dashboard and in notifications, and their IDs are the bare stage: `dotfiles` rather than `up-dotfiles`, `first-party` rather than `up-first-party`, and so on. Use the new IDs with `upkeep run` and the API.
+
 ## Server
 
-- The server can back up its store and restore it. A backup is a copy of the whole store (runs and their logs, the inbox, attention, notes, repositories, and the admin and worker tokens), made while the server runs and kept in `backups` beside the store. Restoring one checks it's a sound Upkeep store and not from a newer Upkeep, then the server starts again on it in the same process, keeping the store it replaced as `server.db.before-restore`. Settings stay where they're set. (timmo001/upkeep#110)
-- Downloads go through one-time links that last five minutes, and uploads of any size are accepted.
+- On upgrade, the store renames `up-<stage>` to `<stage>` everywhere a job ID is kept: runs, heals, parked and paused jobs, held releases, waiting heals, inbox entries and tracked repositories. Run links keep working.
+- A worker that hasn't updated yet still asks for `up-<stage>`. The server gives it those runs under the old name, so it still gets `first-party` and can update itself. This goes in a later release (timmo001/upkeep#111).
 
-## Dashboard
+## Workers
 
-- The Jobs page has a **Backups** section: make a backup, download, delete or restore one kept on the server, or restore a file from this device. After a restore the page waits for the server and loads again.
+- Each release attaches `upkeep-linux-x64` and `upkeep-linux-arm64`, built at the release's version, with `SHA256SUMS`. Machines without the Arch package can install a worker with `mise use -g github:timmo001/upkeep` and keep it current with `machine.selfUpdate`. See [Workers](https://upkeep.timmo.dev/running#workers). (timmo001/upkeep#107)
 
-## CLI
-
-- `upkeep backups` lists the backups kept on the server, and `upkeep backups make`, `get <name> -o <file>`, `remove <name>` and `restore <name-or-file>` do the rest.
-- `upkeep-git` now ships `upkeep-server.service`, a user unit for running the server outside Home Assistant, not enabled. It reads its settings from `~/.config/upkeep/server.env` and restarts on upgrade.
-
-## Home Assistant app
-
-- Home Assistant's backups of the app leave Upkeep's own kept backups out, as they're copies already.
-- Uploads stream through ingress, so restoring a large backup from the sidebar dashboard doesn't sit in the Supervisor's memory.
-
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.69.0...0.70.0
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.70.0...0.71.0
