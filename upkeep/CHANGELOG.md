@@ -1,17 +1,15 @@
-Machine jobs are named by the command they run, and three more keep servers current: containers, system packages and old files. Workers can now run from release binaries through mise.
-
-## Jobs
-
-- Three new machine jobs: `containers` (daily at 02:00) updates containers to their newest images and prunes old ones, `system` (02:15) upgrades system packages and removes what's no longer needed, and `clean` (02:50) removes old caches and logs. `system` and `clean` are opt-in: they only run on workers that list them in `machine.stages`. (timmo001/upkeep#109)
-- Machine jobs are named `dot up <stage>` on the dashboard and in notifications, and their IDs are the bare stage: `dotfiles` rather than `up-dotfiles`, `first-party` rather than `up-first-party`, and so on. Use the new IDs with `upkeep run` and the API.
+The server no longer logs every successful request, and workers find `dot` and OpenCode on the PATH they give their jobs.
 
 ## Server
 
-- On upgrade, the store renames `up-<stage>` to `<stage>` everywhere a job ID is kept: runs, heals, parked and paused jobs, held releases, waiting heals, inbox entries and tracked repositories. Run links keep working.
-- A worker that hasn't updated yet still asks for `up-<stage>`. The server gives it those runs under the old name, so it still gets `first-party` and can update itself. This goes in a later release (timmo001/upkeep#111).
+- Successful responses are left out of the server log. Workers and dashboards poll the API all day, and logging every answer pushed everything else out of a host's journal. Failed requests and 4xx and 5xx responses are still logged.
 
 ## Workers
 
-- Each release attaches `upkeep-linux-x64` and `upkeep-linux-arm64`, built at the release's version, with `SHA256SUMS`. Machines without the Arch package can install a worker with `mise use -g github:timmo001/upkeep` and keep it current with `machine.selfUpdate`. See [Workers](https://upkeep.timmo.dev/running#workers). (timmo001/upkeep#107)
+- Workers look up `dot` and the OpenCode command on the PATH they give their child processes, which includes `~/.local/bin`, rather than the PATH the worker started with. Startup no longer reports `dot` as Graphviz on hosts where `~/.local/bin` comes later, and the missing OpenCode warning no longer shows when it's installed there.
 
-**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.70.0...0.71.0
+## Internals
+
+- Updated wrangler to 4.166.0, oxlint-tsgolint to 7.0.2008 and jdx/mise-action to v5.3.0.
+
+**Full Changelog**: https://github.com/timmo001/upkeep/compare/0.71.0...0.71.1
