@@ -1,7 +1,7 @@
 ---
 name: OpenCode
 # Set to the release version at release time.
-version: 0.5.3
+version: 0.6.0
 slug: opencode
 description: An AI coding agent for your Home Assistant setup, powered by OpenCode
 url: https://github.com/timmo001/app-opencode
@@ -30,6 +30,9 @@ homeassistant_api: true
 # The Supervisor's /core endpoints, which ha-bridge reads Core's journal through.
 hassio_api: true
 hassio_role: homeassistant
+# Offers OpenCode to the OpenCode integration, as an Assist agent.
+discovery:
+  - opencode
 map:
   - type: addon_config
     read_only: false

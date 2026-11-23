@@ -3,7 +3,7 @@
 # scripts/check-apps.ts allows may differ; everything else must match ../opencode/config.yaml.
 name: OpenCode (manager access)
 # Set to the release version at release time, with ../opencode/config.yaml.
-version: 0.5.3
+version: 0.6.0
 slug: opencode_manager
 description: >-
   OpenCode with the Supervisor's manager role, so the agent can read every log and manage
@@ -34,6 +34,9 @@ homeassistant_api: true
 # Every Supervisor log for ha-bridge, and control of apps, the host and backups.
 hassio_api: true
 hassio_role: manager
+# Offers OpenCode to the OpenCode integration, as an Assist agent.
+discovery:
+  - opencode
 map:
   - type: addon_config
     read_only: false
